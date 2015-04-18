@@ -8,6 +8,7 @@ local cloudbkg = love.graphics.newImage( "img/cloudbkg.png" )
 function map:init()
     self.islands = {}
     table.insert(self.islands, Island(5, 2))
+    table.insert(self.islands, Island(18, 10))
     
     self.clouds = {}
     table.insert(self.clouds, Cloud(3, 3))
@@ -31,26 +32,22 @@ function map:draw()
     
     love.graphics.draw(cloudbkg)
     
-    self.batch:clear()
+    
     for i,island in ipairs(self.islands) do
+        
+        self.batch:clear()
         island:drawTiles(self.batch)
-    end
-    love.graphics.draw(self.batch)
-    
-    
-    self.batch:clear()
-    for i,island in ipairs(self.islands) do
+        love.graphics.draw(self.batch)
+        
+        self.batch:clear()
         island:drawObjects(self.batch)
-    end
-    love.graphics.draw(self.batch)
-    
-    
-    self.batch:clear()
-    for i,island in ipairs(self.islands) do
+        love.graphics.draw(self.batch)
+        
+        self.batch:clear()
         island:drawChars(self.batch)
+        love.graphics.draw(self.batch)
+        
     end
-    love.graphics.draw(self.batch)
-    
     
     for i,cloud in ipairs(self.clouds) do
         cloud:draw()
