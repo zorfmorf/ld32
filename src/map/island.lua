@@ -139,10 +139,9 @@ local function fixIsland(tiles)
         for j,entry in pairs(row) do
             if entry == 1 then 
                 tiles[i][j] = { tile = {1, 1}, object = nil }
-                local rand = math.random(0, 7)
+                local rand = math.random(0, 6)
                 if rand == 0 then tiles[i][j].object = "tree" end
                 if rand == 1 then tiles[i][j].object = "stone" end
-                if rand == 2 then tiles[i][j].object = "house" end
             end
         end
     end
@@ -188,8 +187,8 @@ function Island:init(x, y)
         }
     fixIsland(self.tiles)
     
-    self.xs = 0.1
-    self.ys = 0.2
+    self.xs = 0
+    self.ys = 0
 end
 
 

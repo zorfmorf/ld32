@@ -22,6 +22,8 @@ function map:update(dt)
     for i,island in ipairs(self.islands) do
         island:update(dt)
     end
+    
+    self.clouds[math.random(1, #self.clouds)]:update(dt)
 end
 
 

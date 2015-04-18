@@ -4,6 +4,11 @@ Cloud = Class{}
 
 local img = love.graphics.newImage("img/cloud.png")
 
+-- all clouds feel the same wind!
+
+local mx = 0.05 - math.random() * 0.1
+local my = 0.05 - math.random() * 0.1
+
 
 function Cloud:init(x, y)
     self.x = x
@@ -12,7 +17,8 @@ end
 
 
 function Cloud:update(dt)
-    
+   self.x = self.x + mx * dt
+   self.y = self.y + my * dt
 end
 
 
