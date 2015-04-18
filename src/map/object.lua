@@ -8,6 +8,7 @@ function House:init()
     self.res = {6, 0}
     self.name = "House"
     self.villager = 2
+    self.cost = { wood = 2}
 end
 
 
@@ -24,6 +25,7 @@ function Sawmill:init()
     self.res = {7, 1}
     self.name = "Sawmill"
     self.villager = 0
+    self.cost = { stone = 2, wood = 3}
 end
 
 
@@ -40,6 +42,7 @@ function Mason:init()
     self.res = {6, 1}
     self.name = "Mason"
     self.villager = 0
+    self.cost = { stone = 2, wood = 3}
 end
 
 

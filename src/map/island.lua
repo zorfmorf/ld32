@@ -106,6 +106,7 @@ function Island:placeObject(x, y, obj)
                 table.insert(self.villager, Villager(x + 0.5, y + 0.8))
             end
         end
+        game:pay(obj)
     else
         print( "Could not place object", obj.name, "at", x, y )
     end

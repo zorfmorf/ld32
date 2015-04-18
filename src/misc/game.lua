@@ -4,7 +4,7 @@ game = {}
 
 quads = nil
 
-function game:prepareQuads()
+local function prepareQuads()
     quads = {}
     for i = 0,9 do
         quads[i] = {}
@@ -14,6 +14,36 @@ function game:prepareQuads()
     end
 end
 
+local function prepareResources()
+    return {
+        wood = 8,
+        stone = 3,
+        food = 2,
+        ore = 1
+    }
+end
 
 
-game.buildtarget = nil
+function game:init()
+    prepareQuads()
+    self.res = prepareResources()
+    self.buildtarget = nil
+end
+
+
+function game:pay(obj)
+    for res,amount in pairs(obj.cost) do
+        if self.res[res] then
+            self.res[res] = self.res[res] - amount
+        else
+            print( "Invalid resource:", res, amount)
+        end
+    end
+end
+
+
+function game:canPay(obj)
+    for res,amount in pairs(obj.cost) do
+        return self.res[res] >= amount
+    end
+end

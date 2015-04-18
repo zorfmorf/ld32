@@ -5,7 +5,7 @@ Camera = require "lib.hump.camera"
 
 
 function state_ingame:enter()
-    game:prepareQuads()
+    game:init()
     map:init()
     camera = Camera(600, 300)
 end
