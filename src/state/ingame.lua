@@ -12,6 +12,7 @@ end
 
 
 function state_ingame:update(dt)
+    game:update(dt)
     map:update(dt)
     hud:update(dt)
 end

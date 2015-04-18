@@ -14,11 +14,25 @@ function Island:init(x, y)
     -- create default island
     self.tiles = generateIsland()
     
+    
     -- list of villagers
     self.villager = {}
     
     self.xs = math.random() * 0.2 - 0.1
     self.ys = math.random() * 0.2 - 0.1
+end
+
+
+function Island:getTargetList(target)
+    local targets = {}
+    for i,row in pairs(self.tiles) do
+        for j,entry in pairs(row) do
+            if entry and entry.object and entry.object == target then
+                table.insert(targets, { x=i,y=j } )
+            end
+        end
+    end
+    return targets
 end
 
 
@@ -100,13 +114,14 @@ end
 function Island:placeObject(x, y, obj)
     if self.tiles[x] and self.tiles[x][y] then
         self.tiles[x][y].object = obj
-        obj:onSpawn()
         if obj.villager then
             for i=1,obj.villager do
                 table.insert(self.villager, Villager(x + 0.5, y + 0.8))
             end
         end
-        game:pay(obj)
+        obj.loc = {x=x, y=y}
+        obj:onSpawn(self)
+        game:onSpawn(obj)
     else
         print( "Could not place object", obj.name, "at", x, y )
     end

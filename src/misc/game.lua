@@ -18,8 +18,8 @@ local function prepareResources()
     return {
         wood = 8,
         stone = 3,
-        food = 2,
-        ore = 1
+        food = 10,
+        ore = 0
     }
 end
 
@@ -28,6 +28,12 @@ function game:init()
     prepareQuads()
     self.res = prepareResources()
     self.buildtarget = nil
+    self.joblist = {}
+end
+
+
+function game:update(dt)
+    
 end
 
 
@@ -46,4 +52,36 @@ function game:canPay(obj)
     for res,amount in pairs(obj.cost) do
         return self.res[res] >= amount
     end
+end
+
+
+function game:onSpawn(obj)
+    game:pay(obj)
+    while obj.jobs > 0 do
+        table.insert(self.joblist, obj)
+        obj.jobs = obj.jobs - 1
+    end
+end
+
+
+function game:getJob()
+    if #self.joblist > 0 then
+        return table.remove(self.joblist, math.random(1, #self.joblist))
+    end
+    return nil
+end
+
+
+function game:produce(res, amount)
+    self.res[res] = self.res[res] + amount
+end
+
+
+function game:getFood(value)
+    local output = 0
+    if self.res.food > 0 then
+        self.res.food = math.max(0, self.res.food - value)
+        output = value
+    end
+    return output
 end

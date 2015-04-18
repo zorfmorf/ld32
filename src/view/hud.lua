@@ -3,7 +3,7 @@ hud = {}
 
 local delta = 0
 local font = nil
-local text = "Implementing buildings and resources"
+local text = "Implementing villager ai"
 local tileset = love.graphics.newImage("img/tileset.png")
 
 function hud:init()
@@ -11,6 +11,10 @@ function hud:init()
         h = love.graphics.newFont("font/SFPixelate.ttf", 30),
         b = love.graphics.newFont("font/SFPixelate.ttf", 20)
     }
+    
+    -- overwrite of default style
+    Gui.core.style.color.normal.fg = Color.white
+    Gui.core.style.color.group.bg = Color.background
 end
 
 
@@ -30,7 +34,7 @@ local function buildbutton(build, canbuild)
                 love.graphics.rectangle("line", x, y, w, h)
             end
             
-            if not canbuild then love.graphics.setColor(Color.highlight_red) end
+            if not canbuild then love.graphics.setColor(Color.inactive) end
             
             love.graphics.draw(tileset, quads[build.res[1]][build.res[2]], x, y)
             love.graphics.print(title, x + TILE_SIZE, y + TILE_SIZE * 0.5 - love.graphics.getFont():getHeight() * 0.5)
@@ -94,6 +98,7 @@ function hud:update(dt)
     if math.floor(delta * 2) % 4 == 2 then toprint = toprint .. ".." end
     if math.floor(delta * 2) % 4 == 3 then toprint = toprint .. "..." end
     Gui.Label{ text = toprint, pos = {100, 20} }
+    Gui.Label{ text = "FPS: "..love.timer.getFPS(), pos = {screen.w - 150, 20}}
 end
 
 
