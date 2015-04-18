@@ -65,14 +65,21 @@ function Island:drawObjects(batch)
             if entry and entry.object then
                 
                 -- defaults to tree
-                local toDraw = quads[5][1]
+                local toDraw = nil
                 
-                if entry.object == "house" then toDraw = quads[6][0] end
+                if entry.object == "tree" then toDraw = quads[5][1] end
                 if entry.object == "stone" then toDraw = quads[5][0] end
                 
-                batch:add( toDraw,
+                -- okay its an actual object
+                if not toDraw and entry.object then
+                    toDraw = quads[entry.object.res[1]][entry.object.res[2]]
+                end
+                
+                if toDraw then
+                    batch:add( toDraw,
                            math.floor(self.x * TILE_SIZE) + math.floor(i * TILE_SIZE),
                            math.floor(self.y * TILE_SIZE) + math.floor(j * TILE_SIZE))
+                end
             end
         end
     end
@@ -81,4 +88,24 @@ end
 
 function Island:drawChars(batch)
     
+end
+
+
+function Island:getTile(x, y)
+    local tx = math.floor(x / TILE_SIZE - self.x)
+    local ty = math.floor(y / TILE_SIZE - self.y)
+    if self.tiles[tx] and self.tiles[tx][ty] then
+        return self.tiles[tx][ty], tx, ty
+    end
+    return nil
+end
+
+
+function Island:placeObject(x, y, obj)
+    if self.tiles[x] and self.tiles[x][y] then
+        self.tiles[x][y].object = obj
+        obj:onSpawn()
+    else
+        print( "Could not place object", obj.name, "at", x, y )
+    end
 end

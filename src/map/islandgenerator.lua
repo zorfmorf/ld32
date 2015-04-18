@@ -31,7 +31,7 @@ local function fixIsland(tiles)
                    empty(tiles, i+1, j) and
                    empty(tiles, i, j+1) and
                    not empty(tiles, i+1, j+1) then
-                    setTile(target, i, j, { tile = {0, 0} })
+                    setTile(target, i, j, { tile = {0, 0}, edge = true })
                 end
                 
                 if empty(tiles, i-1, j) and 
@@ -40,7 +40,7 @@ local function fixIsland(tiles)
                    empty(tiles, i+1, j) and
                    empty(tiles, i, j+1) and
                    not empty(tiles, i-1, j+1) then
-                    setTile(target, i, j, { tile = {2, 0} })
+                    setTile(target, i, j, { tile = {2, 0}, edge = true })
                 end
                 
                 if empty(tiles, i-1, j) and 
@@ -49,7 +49,7 @@ local function fixIsland(tiles)
                    empty(tiles, i+1, j) and
                    empty(tiles, i, j+1) and
                    not empty(tiles, i+1, j-1) then
-                    setTile(target, i, j, { tile = {0, 2} })
+                    setTile(target, i, j, { tile = {0, 2}, edge = true })
                 end
                 
                 if empty(tiles, i-1, j) and 
@@ -58,59 +58,59 @@ local function fixIsland(tiles)
                    empty(tiles, i+1, j) and
                    empty(tiles, i, j+1) and
                    not empty(tiles, i-1, j-1) then
-                    setTile(target, i, j, { tile = {2, 2} })
+                    setTile(target, i, j, { tile = {2, 2}, edge = true })
                 end
                 
                 if empty(tiles, i-1, j) and 
                    empty(tiles, i, j-1) and 
                    empty(tiles, i, j+1) and
                    not empty(tiles, i+1, j) then
-                    setTile(target, i, j, { tile = {0, 1} })
+                    setTile(target, i, j, { tile = {0, 1}, edge = true })
                 end
                 
                 if empty(tiles, i+1, j) and 
                    empty(tiles, i, j-1) and 
                    empty(tiles, i, j+1) and
                    not empty(tiles, i-1, j) then
-                    setTile(target, i, j, { tile = {2, 1} })
+                    setTile(target, i, j, { tile = {2, 1}, edge = true })
                 end
                 
                 if empty(tiles, i, j+1) and 
                    empty(tiles, i-1, j) and 
                    empty(tiles, i+1, j) and
                    not empty(tiles, i, j-1) then
-                    setTile(target, i, j, { tile = {1, 2} })
+                    setTile(target, i, j, { tile = {1, 2}, edge = true })
                 end
                 
                 if empty(tiles, i, j-1) and 
                    empty(tiles, i-1, j) and 
                    empty(tiles, i+1, j) and
                    not empty(tiles, i, j+1) then
-                    setTile(target, i, j, { tile = {1, 0} })
+                    setTile(target, i, j, { tile = {1, 0}, edge = true })
                 end
                 
                 if empty(tiles, i+1, j+1) and 
                    not empty(tiles, i-1, j) and 
                    not empty(tiles, i, j-1) then
-                    setTile(target, i, j, { tile = {3, 0} })
+                    setTile(target, i, j, { tile = {3, 0}, edge = true })
                 end
                 
                 if empty(tiles, i-1, j+1) and 
                    not empty(tiles, i+1, j) and 
                    not empty(tiles, i, j-1) then
-                    setTile(target, i, j, { tile = {4, 0} })
+                    setTile(target, i, j, { tile = {4, 0}, edge = true })
                 end
                 
                 if empty(tiles, i+1, j-1) and 
                    not empty(tiles, i-1, j) and 
                    not empty(tiles, i, j+1) then
-                    setTile(target, i, j, { tile = {3, 1} })
+                    setTile(target, i, j, { tile = {3, 1}, edge = true })
                 end
                 
                 if empty(tiles, i-1, j-1) and 
                    not empty(tiles, i+1, j) and 
                    not empty(tiles, i, j+1) then
-                    setTile(target, i, j, { tile = {4, 1} })
+                    setTile(target, i, j, { tile = {4, 1}, edge = true })
                 end
                 
             end
@@ -124,7 +124,7 @@ local function fixIsland(tiles)
     for i,row in pairs(tiles) do
         for j,entry in pairs(row) do
             if entry == 1 then 
-                tiles[i][j] = { tile = {1, 1}, object = nil }
+                tiles[i][j] = { tile = {1, 1}, object = nil, edge = false }
                 local rand = math.random(0, 6)
                 if rand == 0 then tiles[i][j].object = "tree" end
                 if rand == 1 then tiles[i][j].object = "stone" end

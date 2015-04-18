@@ -10,6 +10,8 @@ function map:init()
     table.insert(self.islands, Island(5, 2))
     table.insert(self.islands, Island(18, 10))
     
+    self.islands[1]:placeObject(6, 5, House())
+    
     self.clouds = {}
     table.insert(self.clouds, Cloud(3, 3))
     table.insert(self.clouds, Cloud(20, 10))
@@ -32,17 +34,32 @@ function map:draw()
     
     love.graphics.draw(cloudbkg)
     
+    camera:attach()
     
     for i,island in ipairs(self.islands) do
         
+        -- draw tiles
         self.batch:clear()
         island:drawTiles(self.batch)
         love.graphics.draw(self.batch)
         
+        -- draw mouse highlight
+        if love.mouse.isDown("l") then
+            love.graphics.setColor(Color.highlight_green)
+            local mx, my = camera:mousepos()
+            local tile, tx, ty = island:getTile(mx, my)
+            if tile then
+                love.graphics.rectangle("fill", math.floor((island.x + tx) * TILE_SIZE), math.floor((island.y + ty) * TILE_SIZE), TILE_SIZE, TILE_SIZE)
+            end
+            love.graphics.setColor(Color.white)
+        end
+        
+        -- draw objects
         self.batch:clear()
         island:drawObjects(self.batch)
         love.graphics.draw(self.batch)
         
+        -- draw characters
         self.batch:clear()
         island:drawChars(self.batch)
         love.graphics.draw(self.batch)
@@ -53,4 +70,31 @@ function map:draw()
         cloud:draw()
     end
     
+    camera:detach()
+    
+end
+
+
+function map:getTile(x, y)
+    
+    for i=#self.islands,1,-1 do
+        local tile = self.islands[i]:getTile(x, y)
+        if tile then
+            return tile
+        end
+    end
+    
+    return nil
+end
+
+
+function map:place(x, y, obj)
+    for i=#self.islands,1,-1 do
+        local tile, tx, ty = self.islands[i]:getTile(x, y)
+        if tile and not tile.edge then
+            self.islands[i]:placeObject(tx, ty, obj)
+            return true
+        end
+    end
+    return false
 end
