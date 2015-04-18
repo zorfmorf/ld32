@@ -16,8 +16,8 @@ end
 
 local function prepareResources()
     return {
-        wood = 8,
-        stone = 3,
+        wood = 20,
+        stone = 10,
         food = 10,
         ore = 0
     }
@@ -50,8 +50,9 @@ end
 
 function game:canPay(obj)
     for res,amount in pairs(obj.cost) do
-        return self.res[res] >= amount
+        if self.res[res] < amount then return false end
     end
+    return true
 end
 
 
@@ -64,7 +65,7 @@ function game:onSpawn(obj)
 end
 
 
-function game:getJob()
+function game:getJob(islandId)
     if #self.joblist > 0 then
         return table.remove(self.joblist, math.random(1, #self.joblist))
     end

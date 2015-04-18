@@ -126,8 +126,14 @@ local function fixIsland(tiles)
             if entry == 1 then 
                 tiles[i][j] = { tile = {1, 1}, object = nil, edge = false }
                 local rand = math.random(0, 6)
-                if rand == 0 then tiles[i][j].object = "tree" end
-                if rand == 1 then tiles[i][j].object = "stone" end
+                if rand == 0 then 
+                    tiles[i][j].object = "tree"
+                    tiles[i][j].amount = 4 
+                end
+                if rand == 1 then 
+                    tiles[i][j].object = "stone"
+                    tiles[i][j].amount = 4 
+                end
             end
         end
     end

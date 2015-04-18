@@ -2,7 +2,9 @@
 Island = Class{}
 
 
-function Island:init(x, y)
+function Island:init(x, y, id)
+    
+    self.id = id
     
     -- player id
     self.owner = 1
@@ -18,8 +20,8 @@ function Island:init(x, y)
     -- list of villagers
     self.villager = {}
     
-    self.xs = math.random() * 0.2 - 0.1
-    self.ys = math.random() * 0.2 - 0.1
+    self.xs = math.random() * 0.1 - 0.05
+    self.ys = math.random() * 0.1 - 0.05
 end
 
 
@@ -94,9 +96,11 @@ end
 
 function Island:drawChars(batch)
     for i,vil in pairs(self.villager) do
-        batch:add(vil:getQuad(), 
-            math.floor(self.x * TILE_SIZE) + math.floor(vil:getX() * TILE_SIZE), 
-            math.floor(self.y * TILE_SIZE) + math.floor(vil:getY() * TILE_SIZE))
+        if not (vil.job and vil.job.name == "Mine" and vil.state == "idle") then
+            batch:add(vil:getQuad(), 
+                math.floor(self.x * TILE_SIZE) + math.floor(vil:getX() * TILE_SIZE), 
+                math.floor(self.y * TILE_SIZE) + math.floor(vil:getY() * TILE_SIZE))
+        end
     end
 end
 
@@ -121,7 +125,7 @@ function Island:placeObject(x, y, obj)
         end
         obj.loc = {x=x, y=y}
         obj:onSpawn(self)
-        game:onSpawn(obj)
+        game:onSpawn(obj, self)
     else
         print( "Could not place object", obj.name, "at", x, y )
     end

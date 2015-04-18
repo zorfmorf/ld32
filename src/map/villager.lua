@@ -8,7 +8,7 @@ function Villager:init(x, y)
     self.x = x
     self.y = y
     
-    self.hunger = math.random() * 0.03 + 0.01
+    self.hunger = math.random() * 0.02 + 0.01
     self.food = 0
     
     self.xmod = math.random() * 0.4 - 0.2
@@ -36,12 +36,26 @@ function Villager:getQuad()
         quads.default = love.graphics.newQuad(TILE_SIZE * 7, 0, 4, 11, TILE_SIZE * 10, TILE_SIZE * 10)
         quads.hungry = love.graphics.newQuad(TILE_SIZE * 7 + 4, 0, 4, 11, TILE_SIZE * 10, TILE_SIZE * 10)
     end
-    if self.state == "idle" and self.food < 0 then return quads.hungry end
+    if self.state == "idle" and self.food < 0 and not (self.job and self.job.name == "Farm") then return quads.hungry end
     return quads.default
 end
 
 
+function Villager:getNearestTarget(list)
+    local c = { index = 0, dist = 100000}
+    for i,target in pairs(list) do
+        local dist = math.sqrt( math.pow(self.x - target.x, 2) + math.pow(self.y - target.y, 2) )
+        if dist < c.dist then
+            c.index = i
+            c.dist = dist
+        end
+    end    
+    return list[c.index], c.index
+end
+
+
 function Villager:update(dt)
+    
     -- get food and eat something
     self.food = self.food - self.hunger * dt
     if self.food <= 0 then
@@ -56,14 +70,20 @@ function Villager:update(dt)
             self.idle = 0
             if self.job then
                 
-                if self.food >= 0 then
+                if self.food >= 0 or self.job.name == "Farm" then
                     self.state = "walking"
                     
                     -- if not at job, go to job, otherwise to jobtarget
                     if self.job.loc.x == math.floor(self.x) and 
                         self.job.loc.y == math.floor(self.y) then
-                        self.job:produce()
-                        self.target = self.job.targets[math.random(1, #self.job.targets)]
+                            
+                        self.job:produce(self.tind)
+                        
+                        if self.job.targets then
+                            self.target, self.tind = self:getNearestTarget(self.job.targets)
+                        else
+                            self.target = self.job.loc
+                        end
                     else
                         self.target = self.job.loc
                     end
@@ -73,6 +93,7 @@ function Villager:update(dt)
                 self.job = game:getJob()
                 if self.job then
                     self.target = self.job.loc
+                    if self.job.idle then self.avgIdle = self.job.idle end
                     self.state = "walking"
                 end
             end

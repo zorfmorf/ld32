@@ -28,7 +28,7 @@ end
 
 
 function state_ingame:keypressed(key, isrepeat)
-    gui.keyboard.pressed(key)
+    Gui.keyboard.pressed(key)
 end
 
 

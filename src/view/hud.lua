@@ -78,6 +78,8 @@ function hud:update(dt)
         createBuildingButton(House())
         createBuildingButton(Sawmill())
         createBuildingButton(Mason())
+        createBuildingButton(Farm())
+        createBuildingButton(Mine())
     Gui.group.pop{}
     
     
