@@ -20,8 +20,8 @@ function Island:init(x, y, id)
     -- list of villagers
     self.villager = {}
     
-    self.xs = math.random() * 0.1 - 0.05
-    self.ys = math.random() * 0.1 - 0.05
+    self.xs = 0--math.random() * 0.1 - 0.05
+    self.ys = 0--math.random() * 0.1 - 0.05
 end
 
 
@@ -81,6 +81,9 @@ function Island:drawObjects(batch)
                 -- okay its an actual object
                 if not toDraw and entry.object then
                     toDraw = quads[entry.object.res[1]][entry.object.res[2]]
+                    if entry.object.buildtime > 0 then
+                        toDraw = quads[6][3]
+                    end
                 end
                 
                 if toDraw then
@@ -118,13 +121,9 @@ end
 function Island:placeObject(x, y, obj)
     if self.tiles[x] and self.tiles[x][y] then
         self.tiles[x][y].object = obj
-        if obj.villager then
-            for i=1,obj.villager do
-                table.insert(self.villager, Villager(x + 0.5, y + 0.8))
-            end
-        end
         obj.loc = {x=x, y=y}
         obj:onSpawn(self)
+        obj.islandId = self.id
         game:onSpawn(obj, self)
     else
         print( "Could not place object", obj.name, "at", x, y )

@@ -57,7 +57,9 @@ end
 function Villager:update(dt)
     
     -- get food and eat something
-    self.food = self.food - self.hunger * dt
+    if self.food >= 0 then
+        self.food = self.food - self.hunger * dt
+    end
     if self.food <= 0 then
         self.food = self.food + game:getFood(0.1)
     end
@@ -76,13 +78,21 @@ function Villager:update(dt)
                     -- if not at job, go to job, otherwise to jobtarget
                     if self.job.loc.x == math.floor(self.x) and 
                         self.job.loc.y == math.floor(self.y) then
-                            
-                        self.job:produce(self.tind)
                         
-                        if self.job.targets then
-                            self.target, self.tind = self:getNearestTarget(self.job.targets)
+                        if self.job.buildtime > 0 then
+                            
+                            self.job.buildtime = self.job.buildtime - dt
+                            self.idle = self.avgIdle
+                            self.state = "idle"
+                            
                         else
-                            self.target = self.job.loc
+                            self.job:produce(self.tind)
+                            
+                            if self.job.targets then
+                                self.target, self.tind = self:getNearestTarget(self.job.targets)
+                            else
+                                self.target = self.job.loc
+                            end
                         end
                     else
                         self.target = self.job.loc

@@ -3,7 +3,7 @@ hud = {}
 
 local delta = 0
 local font = nil
-local text = "Implementing villager ai"
+local text = "Still stuck on a gameplay issue"
 local tileset = love.graphics.newImage("img/tileset.png")
 
 function hud:init()
@@ -76,10 +76,10 @@ function hud:update(dt)
     Gui.group.push{ grow = "down", pos = {screen.w - 145, 80}, size = {126}, bkg = true, border = true, pad = 6}
         Gui.Label{ text = "Buildmenu" }
         createBuildingButton(House())
-        createBuildingButton(Sawmill())
-        createBuildingButton(Mason())
-        createBuildingButton(Farm())
-        createBuildingButton(Mine())
+        if FLAGS.farm then createBuildingButton(Sawmill()) end
+        if FLAGS.sawmill then createBuildingButton(Mason()) end
+        if FLAGS.house then createBuildingButton(Farm()) end
+        if FLAGS.mason then createBuildingButton(Mine()) end
     Gui.group.pop{}
     
     

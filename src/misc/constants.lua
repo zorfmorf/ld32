@@ -11,3 +11,7 @@ Color = {
 }
 
 V_SPEED = 0.5
+
+C_MOV = 100
+
+FLAGS = {}

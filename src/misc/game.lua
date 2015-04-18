@@ -29,10 +29,22 @@ function game:init()
     self.res = prepareResources()
     self.buildtarget = nil
     self.joblist = {}
+    self.housequeue = {}
 end
 
 
 function game:update(dt)
+    
+    for i,house in ipairs(self.housequeue) do
+        house.buildtime = house.buildtime - dt
+        if house.buildtime < 0 then
+            for i=1,house.villager do
+                table.insert(map.islands[house.islandId].villager, Villager(house.loc.x + 0.5, house.loc.y + 0.8))
+            end
+            table.remove(self.housequeue, i)
+            i = i - 1
+        end
+    end
     
 end
 
@@ -61,6 +73,10 @@ function game:onSpawn(obj)
     while obj.jobs > 0 do
         table.insert(self.joblist, obj)
         obj.jobs = obj.jobs - 1
+    end
+    
+    if obj.name == "House" then
+        table.insert(self.housequeue, obj)
     end
 end
 

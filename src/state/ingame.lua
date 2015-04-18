@@ -29,6 +29,10 @@ end
 
 function state_ingame:keypressed(key, isrepeat)
     Gui.keyboard.pressed(key)
+    if key == "left" then camera:move(-C_MOV, 0) end
+    if key == "right" then camera:move(C_MOV, 0) end
+    if key == "up" then camera:move(0, -C_MOV) end
+    if key == "down" then camera:move(0, C_MOV) end
 end
 
 

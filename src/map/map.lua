@@ -7,10 +7,13 @@ local cloudbkg = love.graphics.newImage( "img/cloudbkg.png" )
 
 function map:init()
     self.islands = {}
-    table.insert(self.islands, Island(5, 2, #self.islands + 1))
-    table.insert(self.islands, Island(18, 10, #self.islands + 1))
+    table.insert(self.islands, Island(3, 0, #self.islands + 1))
+    table.insert(self.islands, Island(13, 11, #self.islands + 1))
+    table.insert(self.islands, Island(18, 2, #self.islands + 1))
     
-    self.islands[1]:placeObject(6, 5, House())
+    local h = House()
+    h.buildtime = 0
+    self.islands[1]:placeObject(6, 5, h)
     
     self.clouds = {}
     table.insert(self.clouds, Cloud(3, 3))
@@ -46,12 +49,12 @@ function map:draw()
         love.graphics.draw(self.batch)
         
         -- draw mouse highlight
-        if love.mouse.isDown("l") and game.buildtarget then
+        if game.buildtarget then
             local mx, my = camera:mousepos()
             local tile, tx, ty = island:getTile(mx, my)
             if tile then
                 love.graphics.setColor(Color.highlight_green)
-                if tile.object then love.graphics.setColor(Color.highlight_red) end
+                if tile.object or tile.edge then love.graphics.setColor(Color.highlight_red) end
                 love.graphics.rectangle("fill", math.floor((island.x + tx) * TILE_SIZE), math.floor((island.y + ty) * TILE_SIZE), TILE_SIZE, TILE_SIZE)
             end
             love.graphics.setColor(Color.white)
