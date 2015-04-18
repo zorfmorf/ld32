@@ -83,6 +83,14 @@ function Island:drawObjects(batch)
                     toDraw = quads[entry.object.res[1]][entry.object.res[2]]
                     if entry.object.buildtime > 0 then
                         toDraw = quads[6][3]
+                    else
+                        -- set finished build flags
+                        if entry.object.name == "Sawmill" then FLAGS.sawmill = true end
+                        if entry.object.name == "House" then FLAGS.house = true end 
+                        if entry.object.name == "Mason" then FLAGS.mason = true end
+                        if entry.object.name == "Farm" then FLAGS.farm = true end
+                        if entry.object.name == "Mine" then FLAGS.mine = true end
+                        if entry.object.name == "Tower" then FLAGS.tower = true end
                     end
                 end
                 

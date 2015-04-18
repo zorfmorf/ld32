@@ -80,6 +80,7 @@ function hud:update(dt)
         if FLAGS.sawmill then createBuildingButton(Mason()) end
         if FLAGS.house then createBuildingButton(Farm()) end
         if FLAGS.mason then createBuildingButton(Mine()) end
+        if FLAGS.mine then createBuildingButton(Tower()) end
     Gui.group.pop{}
     
     

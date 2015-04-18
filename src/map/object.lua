@@ -14,7 +14,7 @@ end
 
 
 function House:onSpawn(island)
-    FLAGS.house = true
+    
 end
 
 
@@ -35,7 +35,6 @@ end
 
 function Sawmill:onSpawn(island)
     self.targets = island:getTargetList("tree")
-    FLAGS.sawmill = true
 end
 
 
@@ -60,7 +59,6 @@ end
 
 
 function Mason:onSpawn(island)
-    FLAGS.mason = true
     self.targets = island:getTargetList("stone")
 end
 
@@ -101,7 +99,7 @@ end
 
 
 function Farm:onSpawn(island)
-    FLAGS.farm = true
+    
 end
 
 
@@ -126,10 +124,35 @@ end
 
 
 function Mine:onSpawn(island)
-    FLAGS.mine = true
+    
 end
 
 
 function Mine:produce()
     game:produce("ore", 0.1)
+end
+
+-- tower
+
+Tower = Class{}
+
+function Tower:init()
+    self.res = {7, 3}
+    self.name = "Tower"
+    self.villager = 0
+    self.cost = { stone = 10, wood = 10}
+    self.jobs = 0
+    self.buildtime = 10
+    self.jobs = 5
+    self.worker = {}
+end
+
+
+function Tower:onSpawn(island)
+    
+end
+
+
+function Tower:produce()
+    
 end
