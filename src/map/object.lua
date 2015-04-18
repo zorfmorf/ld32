@@ -140,11 +140,12 @@ function Tower:init()
     self.res = {7, 3}
     self.name = "Tower"
     self.villager = 0
-    self.cost = { stone = 10, wood = 10}
+    self.cost = { stone = 10, wood = 5, ore = 15}
     self.jobs = 0
     self.buildtime = 10
     self.jobs = 5
     self.worker = {}
+    self.idle = 4
 end
 
 
@@ -154,5 +155,5 @@ end
 
 
 function Tower:produce()
-    
+    game:produce("mana", 0.2)
 end

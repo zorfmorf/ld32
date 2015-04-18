@@ -6,8 +6,12 @@ function Island:init(x, y, id)
     
     self.id = id
     
-    -- player id
-    self.owner = 1
+    -- game
+    self.game = Game()
+    
+    -- ai if necessary
+    self.ai = nil
+    if self.id > 1 then self.ai = Ai(self) end
     
     -- position
     self.x = x

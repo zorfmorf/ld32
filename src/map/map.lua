@@ -49,7 +49,7 @@ function map:draw()
         love.graphics.draw(self.batch)
         
         -- draw mouse highlight
-        if game.buildtarget then
+        if game.buildtarget and i == 1 then
             local mx, my = camera:mousepos()
             local tile, tx, ty = island:getTile(mx, my)
             if tile then
@@ -95,7 +95,7 @@ end
 
 
 function map:place(x, y, obj)
-    for i=#self.islands,1,-1 do
+    for i=1,1 do --#self.islands,1,-1 do
         local tile, tx, ty = self.islands[i]:getTile(x, y)
         if tile and not tile.edge and not tile.object then
             self.islands[i]:placeObject(tx, ty, obj)

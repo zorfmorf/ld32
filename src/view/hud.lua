@@ -3,7 +3,7 @@ hud = {}
 
 local delta = 0
 local font = nil
-local text = "Still stuck on a gameplay issue"
+local text = "It works!"
 local tileset = love.graphics.newImage("img/tileset.png")
 
 function hud:init()
@@ -86,12 +86,13 @@ function hud:update(dt)
     
     -- build ressource display
     love.graphics.setFont(font.b)
-    Gui.group.push{ grow = "down", pos = {screen.w - 145, screen.h - 180}, size = {126}, bkg = true, border = true, pad = 6}
+    Gui.group.push{ grow = "down", pos = {screen.w - 145, screen.h - 200}, size = {126}, bkg = true, border = true, pad = 6}
         Gui.Label{ text = "Resources" }
         createResourceIcon("Stone", game.res.stone, quads[9][0])
         createResourceIcon("Wood", game.res.wood, quads[9][2])
         createResourceIcon("Food", game.res.food, quads[9][1])
         createResourceIcon("Ore", game.res.ore, quads[9][3])
+        if FLAGS.tower then createResourceIcon("Mana", game.res.mana, quads[9][3]) end
     Gui.group.pop{}
     
     -- current message of the day

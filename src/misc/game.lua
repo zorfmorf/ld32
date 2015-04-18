@@ -1,6 +1,5 @@
 -- container for game information
-game = {}
-
+Game = Class{}
 
 quads = nil
 
@@ -19,13 +18,14 @@ local function prepareResources()
         wood = 20,
         stone = 10,
         food = 10,
-        ore = 0
+        ore = 0,
+        mana = 0
     }
 end
 
 
-function game:init()
-    prepareQuads()
+function Game:init()
+    if not quads then prepareQuads() end
     self.res = prepareResources()
     self.buildtarget = nil
     self.joblist = {}
@@ -33,7 +33,7 @@ function game:init()
 end
 
 
-function game:update(dt)
+function Game:update(dt)
     
     for i,house in ipairs(self.housequeue) do
         house.buildtime = house.buildtime - dt
@@ -49,7 +49,7 @@ function game:update(dt)
 end
 
 
-function game:pay(obj)
+function Game:pay(obj)
     for res,amount in pairs(obj.cost) do
         if self.res[res] then
             self.res[res] = self.res[res] - amount
@@ -60,7 +60,7 @@ function game:pay(obj)
 end
 
 
-function game:canPay(obj)
+function Game:canPay(obj)
     for res,amount in pairs(obj.cost) do
         if self.res[res] < amount then return false end
     end
@@ -68,7 +68,7 @@ function game:canPay(obj)
 end
 
 
-function game:onSpawn(obj)
+function Game:onSpawn(obj)
     game:pay(obj)
     while obj.jobs > 0 do
         table.insert(self.joblist, obj)
@@ -81,7 +81,7 @@ function game:onSpawn(obj)
 end
 
 
-function game:getJob(islandId)
+function Game:getJob()
     if #self.joblist > 0 then
         return table.remove(self.joblist, math.random(1, #self.joblist))
     end
@@ -89,12 +89,12 @@ function game:getJob(islandId)
 end
 
 
-function game:produce(res, amount)
+function Game:produce(res, amount)
     self.res[res] = self.res[res] + amount
 end
 
 
-function game:getFood(value)
+function Game:getFood(value)
     local output = 0
     if self.res.food > 0 then
         self.res.food = math.max(0, self.res.food - value)
