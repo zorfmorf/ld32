@@ -38,7 +38,7 @@ Mason = Class{}
 
 function Mason:init()
     self.res = {6, 1}
-    self.name = "Stonemason"
+    self.name = "Mason"
     self.villager = 0
 end
 

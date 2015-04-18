@@ -18,6 +18,8 @@ function map:init()
     table.insert(self.clouds, Cloud(6, 10))
     
     self.batch = love.graphics.newSpriteBatch( tileset, 10000 )
+    
+    hud:init()
 end
 
 
@@ -44,7 +46,7 @@ function map:draw()
         love.graphics.draw(self.batch)
         
         -- draw mouse highlight
-        if love.mouse.isDown("l") then
+        if love.mouse.isDown("l") and game.buildtarget then
             local mx, my = camera:mousepos()
             local tile, tx, ty = island:getTile(mx, my)
             if tile then

@@ -1,23 +1,8 @@
 
 Island = Class{}
 
-local quads = nil
-
-
-local function prepareQuads()
-    quads = {}
-    for i = 0,9 do
-        quads[i] = {}
-        for j = 0,9 do
-            quads[i][j] = love.graphics.newQuad(i * TILE_SIZE, j * TILE_SIZE, TILE_SIZE, TILE_SIZE, TILE_SIZE * 10, TILE_SIZE * 10)
-        end
-    end
-end
-
 
 function Island:init(x, y)
-    
-    if not quads then prepareQuads() end
     
     -- player id
     self.owner = 1
@@ -32,8 +17,8 @@ function Island:init(x, y)
     -- list of villagers
     self.villager = {}
     
-    self.xs = math.random() * 0.4 - 0.2
-    self.ys = math.random() * 0.4 - 0.2
+    self.xs = math.random() * 0.2 - 0.1
+    self.ys = math.random() * 0.2 - 0.1
 end
 
 

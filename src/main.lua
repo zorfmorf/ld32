@@ -18,6 +18,7 @@ end
 requireDir( 'state' )
 requireDir( 'map' )
 requireDir( 'misc' )
+requireDir( 'view' )
 
 
 function love.load()
@@ -29,7 +30,7 @@ end
 
 
 function love.update(dt)
-
+    update_screen()
 end
 
 
@@ -40,4 +41,8 @@ end
 
 function love.keypressed(key, isrepeat)
     if key == "escape" then love.event.push("quit") end
+end
+
+function love.textinput(str)
+    gui.keyboard.textinput(str)
 end
