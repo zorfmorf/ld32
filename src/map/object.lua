@@ -4,7 +4,6 @@
 
 House = Class{}
 
-
 function House:init()
     self.res = {6, 0}
     self.name = "House"
@@ -13,5 +12,37 @@ end
 
 
 function House:onSpawn()
+    
+end
+
+
+-- sawmill
+
+Sawmill = Class{}
+
+function Sawmill:init()
+    self.res = {7, 1}
+    self.name = "Sawmill"
+    self.villager = 0
+end
+
+
+function Sawmill:onSpawn()
+    
+end
+
+
+-- mason
+
+Mason = Class{}
+
+function Mason:init()
+    self.res = {6, 1}
+    self.name = "Stonemason"
+    self.villager = 0
+end
+
+
+function Mason:onSpawn()
     
 end

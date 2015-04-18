@@ -35,7 +35,7 @@ function state_ingame:draw()
 end
 
 
-function state_ingame:mousepressed(x, y, button)
+function state_ingame:mousereleased(x, y, button)
     if button == "l" then
         local mx, my = camera:mousepos()
         local result = map:place(mx, my, House())

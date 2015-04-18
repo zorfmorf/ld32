@@ -45,10 +45,11 @@ function map:draw()
         
         -- draw mouse highlight
         if love.mouse.isDown("l") then
-            love.graphics.setColor(Color.highlight_green)
             local mx, my = camera:mousepos()
             local tile, tx, ty = island:getTile(mx, my)
             if tile then
+                love.graphics.setColor(Color.highlight_green)
+                if tile.object then love.graphics.setColor(Color.highlight_red) end
                 love.graphics.rectangle("fill", math.floor((island.x + tx) * TILE_SIZE), math.floor((island.y + ty) * TILE_SIZE), TILE_SIZE, TILE_SIZE)
             end
             love.graphics.setColor(Color.white)
@@ -91,7 +92,7 @@ end
 function map:place(x, y, obj)
     for i=#self.islands,1,-1 do
         local tile, tx, ty = self.islands[i]:getTile(x, y)
-        if tile and not tile.edge then
+        if tile and not tile.edge and not tile.object then
             self.islands[i]:placeObject(tx, ty, obj)
             return true
         end
