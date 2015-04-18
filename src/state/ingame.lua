@@ -5,14 +5,12 @@ Camera = require "lib.hump.camera"
 
 
 function state_ingame:enter()
-    game:init()
     map:init()
     camera = Camera(600, 300)
 end
 
 
 function state_ingame:update(dt)
-    game:update(dt)
     map:update(dt)
     hud:update(dt)
 end
@@ -37,6 +35,9 @@ end
 
 
 function state_ingame:mousereleased(x, y, button)
+    
+    local game = map.islands[1].game
+    
     if button == "l" and game.buildtarget then
         local mx, my = camera:mousepos()
         local result = map:place(mx, my, game.buildtarget)

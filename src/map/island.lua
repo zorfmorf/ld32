@@ -7,7 +7,7 @@ function Island:init(x, y, id)
     self.id = id
     
     -- game
-    self.game = Game()
+    self.game = Game(self)
     
     -- ai if necessary
     self.ai = nil
@@ -51,6 +51,8 @@ function Island:update(dt)
     if self.x > 50 then self.x = -20 end
     if self.y < -20 then self.y = 40 end
     if self.y > 40 then self.y = -20 end
+    
+    self.game:update(dt)
     
     for i,villager in pairs(self.villager) do
         villager:update(dt)
@@ -136,7 +138,7 @@ function Island:placeObject(x, y, obj)
         obj.loc = {x=x, y=y}
         obj:onSpawn(self)
         obj.islandId = self.id
-        game:onSpawn(obj, self)
+        self.game:onSpawn(obj, self)
     else
         print( "Could not place object", obj.name, "at", x, y )
     end

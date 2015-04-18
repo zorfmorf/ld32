@@ -6,11 +6,15 @@ local font = nil
 local text = "It works!"
 local tileset = love.graphics.newImage("img/tileset.png")
 
+local game = nil
+
 function hud:init()
     font = {
         h = love.graphics.newFont("font/SFPixelate.ttf", 30),
         b = love.graphics.newFont("font/SFPixelate.ttf", 20)
     }
+    
+    game = map.islands[1].game
     
     -- overwrite of default style
     Gui.core.style.color.normal.fg = Color.white
@@ -76,23 +80,23 @@ function hud:update(dt)
     Gui.group.push{ grow = "down", pos = {screen.w - 145, 80}, size = {126}, bkg = true, border = true, pad = 6}
         Gui.Label{ text = "Buildmenu" }
         createBuildingButton(House())
-        if FLAGS.farm then createBuildingButton(Sawmill()) end
-        if FLAGS.sawmill then createBuildingButton(Mason()) end
-        if FLAGS.house then createBuildingButton(Farm()) end
-        if FLAGS.mason then createBuildingButton(Mine()) end
-        if FLAGS.mine then createBuildingButton(Tower()) end
+        if FLAGS.farm then createBuildingButton(Sawmill(map.islands[1])) end
+        if FLAGS.sawmill then createBuildingButton(Mason(map.islands[1])) end
+        if FLAGS.house then createBuildingButton(Farm(map.islands[1])) end
+        if FLAGS.mason then createBuildingButton(Mine(map.islands[1])) end
+        if FLAGS.mine then createBuildingButton(Tower(map.islands[1])) end
     Gui.group.pop{}
     
     
     -- build ressource display
     love.graphics.setFont(font.b)
-    Gui.group.push{ grow = "down", pos = {screen.w - 145, screen.h - 200}, size = {126}, bkg = true, border = true, pad = 6}
+    Gui.group.push{ grow = "down", pos = {screen.w - 145, screen.h - 220}, size = {126}, bkg = true, border = true, pad = 6}
         Gui.Label{ text = "Resources" }
         createResourceIcon("Stone", game.res.stone, quads[9][0])
         createResourceIcon("Wood", game.res.wood, quads[9][2])
         createResourceIcon("Food", game.res.food, quads[9][1])
         createResourceIcon("Ore", game.res.ore, quads[9][3])
-        if FLAGS.tower then createResourceIcon("Mana", game.res.mana, quads[9][3]) end
+        if FLAGS.tower then createResourceIcon("Mana", game.res.mana, quads[9][4]) end
     Gui.group.pop{}
     
     -- current message of the day

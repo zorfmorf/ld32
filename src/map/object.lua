@@ -3,9 +3,10 @@
 
 House = Class{}
 
-function House:init()
+function House:init(island)
     self.res = {6, 0}
     self.name = "House"
+    self.island = island
     self.villager = 3
     self.jobs = 0
     self.buildtime = 3
@@ -22,9 +23,10 @@ end
 
 Sawmill = Class{}
 
-function Sawmill:init()
+function Sawmill:init(island)
     self.res = {7, 1}
     self.name = "Sawmill"
+    self.island = island
     self.villager = 0
     self.cost = { stone = 2, wood = 3}
     self.jobs = 4
@@ -33,13 +35,13 @@ function Sawmill:init()
 end
 
 
-function Sawmill:onSpawn(island)
-    self.targets = island:getTargetList("tree")
+function Sawmill:onSpawn()
+    self.targets = self.island:getTargetList("tree")
 end
 
 
-function Sawmill:produce(tind)
-    game:produce("wood", 0.1)
+function Sawmill:produce()
+    self.island.game:produce("wood", 0.1)
 end
 
 
@@ -47,10 +49,11 @@ end
 
 Mason = Class{}
 
-function Mason:init()
+function Mason:init(island)
     self.res = {6, 1}
     self.name = "Mason"
     self.villager = 0
+    self.island = island
     self.cost = { stone = 2, wood = 3}
     self.jobs = 5
     self.buildtime = 5
@@ -58,38 +61,26 @@ function Mason:init()
 end
 
 
-function Mason:onSpawn(island)
-    self.targets = island:getTargetList("stone")
+function Mason:onSpawn()
+    self.targets = self.island:getTargetList("stone")
 end
 
 
-function Mason:produce(tind)
-    
-    -- handle resource usage
-    if tind then
-        
-        -- TODO Fix and/or implement
-        if false and amount > 0 and self.tind then
-            local tile = map.islands[self.job.island][self.target.x][self.target.y]
-            if tile and tile.amount then
-                tile.amount = tile.amount - amount
-            end
-            self.tind = nil
-        end
-    end
+function Mason:produce()
     
     -- actually produce
-    game:produce("stone", 0.1)
+    self.island.game:produce("stone", 0.1)
 end
 
 -- farm
 
 Farm = Class{}
 
-function Farm:init()
+function Farm:init(island)
     self.res = {6, 2}
     self.name = "Farm"
     self.villager = 0
+    self.island = island
     self.cost = { stone = 1, wood = 3}
     self.jobs = 2
     self.buildtime = 5
@@ -98,23 +89,24 @@ function Farm:init()
 end
 
 
-function Farm:onSpawn(island)
+function Farm:onSpawn()
     
 end
 
 
 function Farm:produce()
-    game:produce("food", 1)
+    self.island.game:produce("food", 1)
 end
 
 -- mine
 
 Mine = Class{}
 
-function Mine:init()
+function Mine:init(island)
     self.res = {7, 2}
     self.name = "Mine"
     self.villager = 0
+    self.island = island
     self.cost = { stone = 3, wood = 3}
     self.jobs = 4
     self.buildtime = 5
@@ -123,23 +115,24 @@ function Mine:init()
 end
 
 
-function Mine:onSpawn(island)
+function Mine:onSpawn()
     
 end
 
 
 function Mine:produce()
-    game:produce("ore", 0.1)
+    self.island.game:produce("ore", 0.1)
 end
 
 -- tower
 
 Tower = Class{}
 
-function Tower:init()
+function Tower:init(island)
     self.res = {7, 3}
     self.name = "Tower"
     self.villager = 0
+    self.island = island
     self.cost = { stone = 10, wood = 5, ore = 15}
     self.jobs = 0
     self.buildtime = 10
@@ -149,11 +142,11 @@ function Tower:init()
 end
 
 
-function Tower:onSpawn(island)
+function Tower:onSpawn()
     
 end
 
 
 function Tower:produce()
-    game:produce("mana", 0.2)
+    self.island.game:produce("mana", 0.2)
 end

@@ -44,5 +44,5 @@ function love.keypressed(key, isrepeat)
 end
 
 function love.textinput(str)
-    gui.keyboard.textinput(str)
+    Gui.keyboard.textinput(str)
 end

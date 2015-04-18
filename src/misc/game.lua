@@ -24,11 +24,12 @@ local function prepareResources()
 end
 
 
-function Game:init()
+function Game:init(island)
     if not quads then prepareQuads() end
     self.res = prepareResources()
     self.buildtarget = nil
     self.joblist = {}
+    self.island = island
     self.housequeue = {}
 end
 
@@ -39,7 +40,7 @@ function Game:update(dt)
         house.buildtime = house.buildtime - dt
         if house.buildtime < 0 then
             for i=1,house.villager do
-                table.insert(map.islands[house.islandId].villager, Villager(house.loc.x + 0.5, house.loc.y + 0.8))
+                table.insert(self.island.villager, Villager(house.loc.x + 0.5, house.loc.y + 0.8, self.island))
             end
             table.remove(self.housequeue, i)
             i = i - 1
@@ -69,7 +70,7 @@ end
 
 
 function Game:onSpawn(obj)
-    game:pay(obj)
+    self:pay(obj)
     while obj.jobs > 0 do
         table.insert(self.joblist, obj)
         obj.jobs = obj.jobs - 1

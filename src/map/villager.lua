@@ -4,9 +4,10 @@ Villager = Class{}
 local quads = nil
 
 
-function Villager:init(x, y)
+function Villager:init(x, y, island)
     self.x = x
     self.y = y
+    self.island = island
     
     self.hunger = math.random() * 0.02 + 0.01
     self.food = 0
@@ -61,7 +62,7 @@ function Villager:update(dt)
         self.food = self.food - self.hunger * dt
     end
     if self.food <= 0 then
-        self.food = self.food + game:getFood(0.1)
+        self.food = self.food + self.island.game:getFood(0.1)
     end
     
     
@@ -100,7 +101,7 @@ function Villager:update(dt)
                 end
                 
             else
-                self.job = game:getJob()
+                self.job = self.island.game:getJob()
                 if self.job then
                     self.target = self.job.loc
                     if self.job.idle then self.avgIdle = self.job.idle end
