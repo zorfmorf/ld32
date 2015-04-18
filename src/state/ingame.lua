@@ -14,7 +14,8 @@ end
 
 function state_ingame:draw()
     
-    love.graphics.scale()
+    love.graphics.setDefaultFilter( "nearest", "nearest" )
+    
     map:draw()
     
 end
