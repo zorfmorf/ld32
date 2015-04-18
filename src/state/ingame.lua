@@ -5,7 +5,7 @@ Camera = require "lib.hump.camera"
 
 local font = love.graphics.newFont("font/SFPixelate.ttf", 30)
 local delta = 0
-local text = "Currently Implementing tile selection"
+local text = "Planning next development steps"
 
 function state_ingame:enter()
     map:init()

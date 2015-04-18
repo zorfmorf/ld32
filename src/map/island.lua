@@ -29,6 +29,9 @@ function Island:init(x, y)
     -- create default island
     self.tiles = generateIsland()
     
+    -- list of villagers
+    self.villager = {}
+    
     self.xs = math.random() * 0.4 - 0.2
     self.ys = math.random() * 0.4 - 0.2
 end
@@ -39,10 +42,14 @@ function Island:update(dt)
     self.y = self.y + self.ys * dt
     
     -- TODO: delete
-    if self.x < -30 then self.x = 60 end
-    if self.x > 60 then self.x = -30 end
-    if self.y < -30 then self.y = 40 end
-    if self.y > 40 then self.y = -30 end
+    if self.x < -20 then self.x = 50 end
+    if self.x > 50 then self.x = -20 end
+    if self.y < -20 then self.y = 40 end
+    if self.y > 40 then self.y = -20 end
+    
+    for i,villager in pairs(self.villager) do
+        villager:update(dt)
+    end
 end
 
 
@@ -87,7 +94,11 @@ end
 
 
 function Island:drawChars(batch)
-    
+    for i,vil in pairs(self.villager) do
+        batch:add(vil:getQuad(), 
+            math.floor(self.x * TILE_SIZE) + math.floor(vil:getX() * TILE_SIZE), 
+            math.floor(self.y * TILE_SIZE) + math.floor(vil:getY() * TILE_SIZE))
+    end
 end
 
 
@@ -105,6 +116,11 @@ function Island:placeObject(x, y, obj)
     if self.tiles[x] and self.tiles[x][y] then
         self.tiles[x][y].object = obj
         obj:onSpawn()
+        if obj.villager then
+            for i=1,obj.villager do
+                table.insert(self.villager, Villager(x + 0.5, y + 0.8))
+            end
+        end
     else
         print( "Could not place object", obj.name, "at", x, y )
     end

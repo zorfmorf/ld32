@@ -8,9 +8,10 @@ House = Class{}
 function House:init()
     self.res = {6, 0}
     self.name = "House"
+    self.villager = 2
 end
 
 
 function House:onSpawn()
-    --TODO: add two villagers
+    
 end
