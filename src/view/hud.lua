@@ -61,6 +61,15 @@ local function buildbutton(build, canbuild)
             love.graphics.print(title, x + TILE_SIZE, y + TILE_SIZE * 0.5 - love.graphics.getFont():getHeight() * 0.5)
             
             love.graphics.setColor(Color.white)
+            
+            if state == "hot" and not (build.name == "House") and not canbuild then
+                love.graphics.print("Costs:", x - 120, y)
+                local i = 1
+                for res,amount in pairs(build.cost) do
+                    love.graphics.print(tostring(amount).." "..res, x - 120, y + i * TILE_SIZE)
+                    i = i + 1
+                end
+            end
         end
 end
 
