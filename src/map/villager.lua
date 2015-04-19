@@ -157,9 +157,9 @@ function Villager:update(dt)
                     -- check if one would go over a tile in the air
                     local tx = { x = math.floor(self.x + self.dir.x), y = math.floor(self.y) }
                     local ty = { x = math.floor(self.x), y = math.floor(self.y + self.dir.y) }
-                    if not self.island.tiles[tx.x] or not self.island.tiles[tx.x][tx.y] or self.island.tiles[tx.x][tx.y].edge then
+                    if false then --not self.island.tiles[tx.x] or not self.island.tiles[tx.x][tx.y] or self.island.tiles[tx.x][tx.y].edge then
                         self.dir.x = 0
-                    elseif not self.island.tiles[ty.x] or not self.island.tiles[ty.x][ty.y] or self.island.tiles[ty.x][ty.y].edge then
+                    elseif false then --not self.island.tiles[ty.x] or not self.island.tiles[ty.x][ty.y] or self.island.tiles[ty.x][ty.y].edge then
                         self.dir.y = 0
                     else
                         -- in this case just eliminate a random one

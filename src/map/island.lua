@@ -62,11 +62,13 @@ function Island:update(dt)
     self.x = self.x + self.xs * dt
     self.y = self.y + self.ys * dt
     
-    -- TODO: delete
-    if self.x < -20 then self.x = 50 end
-    if self.x > 50 then self.x = -20 end
-    if self.y < -20 then self.y = 40 end
-    if self.y > 40 then self.y = -20 end
+    local wx = screen.w / TILE_SIZE
+    local wy = screen.h / TILE_SIZE
+    
+    if self.x < -1 then self.x = self.x + wx + 1 end
+    if self.x > wx then self.x = (self.x - wx) - 1 end
+    if self.y < -1 then print(self.y) self.y = self.y + wy + 1 print(self.y) end
+    if self.y > wy + 1 then print("to large") self.y = (self.y - wy) - 1 end
     
     self.game:update(dt)
     if self.ai then self.ai:update(dt) end
@@ -77,13 +79,21 @@ function Island:update(dt)
 end
 
 
+function Island:calcDrawPos(px, py)
+    local tx = math.floor(self.x * TILE_SIZE) + math.floor(px * TILE_SIZE)
+    local ty = math.floor(self.y * TILE_SIZE) + math.floor(py * TILE_SIZE)
+    if tx > screen.w then tx = tx - screen.w - TILE_SIZE end
+    if ty > screen.h then ty = ty - screen.h - TILE_SIZE end
+    return tx, ty
+end
+
+
 function Island:drawTiles(batch)
     for i,row in pairs(self.tiles) do
         for j,entry in pairs(row) do
             if entry and entry.tile then
-                batch:add( quads[entry.tile[1]][entry.tile[2]],
-                           math.floor(self.x * TILE_SIZE) + math.floor(i * TILE_SIZE),
-                           math.floor(self.y * TILE_SIZE) + math.floor(j * TILE_SIZE))
+                local tx, ty = self:calcDrawPos(i, j)
+                batch:add( quads[entry.tile[1]][entry.tile[2]], tx, ty)
             end
         end
     end
@@ -120,9 +130,8 @@ function Island:drawObjects(batch)
                 end
                 
                 if toDraw then
-                    batch:add( toDraw,
-                           math.floor(self.x * TILE_SIZE) + math.floor(i * TILE_SIZE),
-                           math.floor(self.y * TILE_SIZE) + math.floor(j * TILE_SIZE))
+                    local tx, ty = self:calcDrawPos(i, j)
+                    batch:add( toDraw, tx, ty)
                 end
             end
         end
@@ -133,9 +142,8 @@ end
 function Island:drawChars(batch)
     for i,vil in pairs(self.villager) do
         if not (vil.job and vil.job.name == "Mine" and vil.state == "idle") then
-            batch:add(vil:getQuad(), 
-                math.floor(self.x * TILE_SIZE) + math.floor(vil:getX() * TILE_SIZE), 
-                math.floor(self.y * TILE_SIZE) + math.floor(vil:getY() * TILE_SIZE))
+            local tx, ty = self:calcDrawPos(vil:getX(), vil:getY())
+            batch:add(vil:getQuad(), tx, ty)
         end
     end
 end

@@ -37,8 +37,6 @@ function map:draw()
     
     love.graphics.draw(cloudbkg)
     
-    camera:attach()
-    
     for i,island in ipairs(self.islands) do
         
         -- draw tiles
@@ -48,7 +46,7 @@ function map:draw()
         
         -- draw mouse highlight
         if island.game.buildtarget and i == 1 then
-            local mx, my = camera:mousepos()
+            local mx, my = love.mouse.getPosition()
             local tile, tx, ty = island:getTile(mx, my)
             if tile then
                 love.graphics.setColor(Color.highlight_green)
@@ -73,8 +71,6 @@ function map:draw()
     for i,cloud in ipairs(self.clouds) do
         cloud:draw()
     end
-    
-    camera:detach()
     
 end
 

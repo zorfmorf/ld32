@@ -15,6 +15,6 @@ V_CLOSE_ENOUGH = 0.2
 
 C_MOV = 100
 
-I_MOV = 1
+I_MOV = 0.3
 
 FLAGS = {}
