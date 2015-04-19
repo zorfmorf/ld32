@@ -92,25 +92,25 @@ local function fixIsland(tiles)
                 if empty(tiles, i+1, j+1) and 
                    not empty(tiles, i-1, j) and 
                    not empty(tiles, i, j-1) then
-                    setTile(target, i, j, { tile = {3, 0}, edge = true })
+                    setTile(target, i, j, { tile = {3, 0}, edge = false })
                 end
                 
                 if empty(tiles, i-1, j+1) and 
                    not empty(tiles, i+1, j) and 
                    not empty(tiles, i, j-1) then
-                    setTile(target, i, j, { tile = {4, 0}, edge = true })
+                    setTile(target, i, j, { tile = {4, 0}, edge = false })
                 end
                 
                 if empty(tiles, i+1, j-1) and 
                    not empty(tiles, i-1, j) and 
                    not empty(tiles, i, j+1) then
-                    setTile(target, i, j, { tile = {3, 1}, edge = true })
+                    setTile(target, i, j, { tile = {3, 1}, edge = false })
                 end
                 
                 if empty(tiles, i-1, j-1) and 
                    not empty(tiles, i+1, j) and 
                    not empty(tiles, i, j+1) then
-                    setTile(target, i, j, { tile = {4, 1}, edge = true })
+                    setTile(target, i, j, { tile = {4, 1}, edge = false })
                 end
                 
             end
@@ -169,11 +169,11 @@ function generateIsland()
         
     if islandcounter == 1 then
         tiles = {
-            {0,0,1,1,0},
-            {0,1,1,1,0},
-            {0,1,1,1,1},
-            {1,1,1,1,1},
-            {0,1,1,0,0}
+            {0,0,1,1,0,0},
+            {0,1,1,1,1,0},
+            {0,1,1,1,1,1},
+            {1,1,1,1,1,1},
+            {0,1,1,1,1,0}
         }
     end
     

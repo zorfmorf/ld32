@@ -14,7 +14,7 @@ function House:init(island)
 end
 
 
-function House:onSpawn(island)
+function House:onSpawn()
     
 end
 

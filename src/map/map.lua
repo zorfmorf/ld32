@@ -8,7 +8,7 @@ local cloudbkg = love.graphics.newImage( "img/cloudbkg.png" )
 function map:init()
     self.islands = {}
     table.insert(self.islands, Island(3, 0, #self.islands + 1))
-    table.insert(self.islands, Island(13, 11, #self.islands + 1))
+    table.insert(self.islands, Island(13, 10, #self.islands + 1))
     table.insert(self.islands, Island(18, 2, #self.islands + 1))
     
     local h = House()

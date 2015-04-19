@@ -3,7 +3,7 @@ hud = {}
 
 local delta = 0
 local font = nil
-local text = "It works!"
+local text = "Implementing enemy ai"
 local tileset = love.graphics.newImage("img/tileset.png")
 
 local game = nil

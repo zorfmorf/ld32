@@ -13,11 +13,11 @@ local function prepareQuads()
     end
 end
 
-local function prepareResources()
+local function prepareResources(i)
     return {
-        wood = 60,
-        stone = 10,
-        food = 10,
+        wood = 10 * i,
+        stone = 10 * i,
+        food = 10 * i,
         ore = 0,
         mana = 0
     }
@@ -25,11 +25,12 @@ end
 
 
 function Game:init(island)
+    self.island = island
     if not quads then prepareQuads() end
-    self.res = prepareResources()
+    self.res = prepareResources(1)
+    if self.island.id > 1 then self.res = prepareResources(3) end
     self.buildtarget = nil
     self.joblist = {}
-    self.island = island
     self.housequeue = {}
 end
 

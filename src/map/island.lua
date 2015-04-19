@@ -20,12 +20,28 @@ function Island:init(x, y, id)
     -- create default island
     self.tiles = generateIsland()
     
+    -- find max values
+    self:calcMax()
     
     -- list of villagers
     self.villager = {}
     
     self.xs = 0--math.random() * 0.1 - 0.05
     self.ys = 0--math.random() * 0.1 - 0.05
+end
+
+
+function Island:calcMax()
+    self.xmax = 0
+    self.ymax = 0
+    for i,row in pairs(self.tiles) do
+        for j,entry in pairs(row) do
+            if entry then
+                self.xmax = math.max(self.xmax, i)
+                self.ymax = math.max(self.ymax, j)
+            end
+        end
+    end
 end
 
 
@@ -53,6 +69,7 @@ function Island:update(dt)
     if self.y > 40 then self.y = -20 end
     
     self.game:update(dt)
+    if self.ai then self.ai:update(dt) end
     
     for i,villager in pairs(self.villager) do
         villager:update(dt)

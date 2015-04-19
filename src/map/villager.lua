@@ -34,11 +34,14 @@ end
 function Villager:getQuad()
     if not quads then
         quads = {}
-        quads.default = love.graphics.newQuad(TILE_SIZE * 7, 0, 4, 11, TILE_SIZE * 10, TILE_SIZE * 10)
-        quads.hungry = love.graphics.newQuad(TILE_SIZE * 7 + 4, 0, 4, 11, TILE_SIZE * 10, TILE_SIZE * 10)
+        for i = 1,3 do
+            quads[i] = {}
+            quads[i].default = love.graphics.newQuad(TILE_SIZE * 7 + (i-1) * 8, 0, 4, 11, TILE_SIZE * 10, TILE_SIZE * 10)
+            quads[i].hungry = love.graphics.newQuad(TILE_SIZE * 7 + (i-1) * 8 + 4, 0, 4, 11, TILE_SIZE * 10, TILE_SIZE * 10)
+        end
     end
-    if self.state == "idle" and self.food < 0 and not (self.job and self.job.name == "Farm") then return quads.hungry end
-    return quads.default
+    if self.state == "idle" and self.food < 0 and not (self.job and self.job.name == "Farm") then return quads[self.island.id].hungry end
+    return quads[self.island.id].default
 end
 
 
