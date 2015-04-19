@@ -16,6 +16,8 @@ function hud:init()
     
     game = map.islands[1].game
     
+    self.buttonquad = love.graphics.newQuad(6 * TILE_SIZE, 7 * TILE_SIZE, TILE_SIZE * 2, TILE_SIZE * 2, tileset:getWidth(), tileset:getHeight())
+    
     -- overwrite of default style
     Gui.core.style.color.normal.fg = Color.white
     
@@ -95,10 +97,10 @@ local function createMoveButton(text, quad)
                 if not (state == "normal") then
                     love.graphics.setColor(Color.highlight_green)
                 end
-                if game.res.mana <= 0 then love.graphics.setColor(Color.inactive) end
+                if game.res.mana < 1 then love.graphics.setColor(Color.inactive) end
                 love.graphics.draw(tileset, quad, x, y)
             end
-        } and game.res.mana > 0 then
+        } and game.res.mana >= 1 then
         if text == "UU" then game.island:move(0, -1) end
         if text == "LL" then game.island:move(-1, 0) end
         if text == "RR" then game.island:move(1, 0) end
@@ -132,7 +134,7 @@ function hud:update(dt)
             if FLAGS.sawmill then createBuildingButton(self.build.farm) end
             if FLAGS.farm then createBuildingButton(self.build.mason) end
             if FLAGS.mason then createBuildingButton(self.build.mine) end
-            if FLAGS.mine then createBuildingButton(self.build.tower) end
+            if true or FLAGS.mine then createBuildingButton(self.build.tower) end
         Gui.group.pop{}
         
         
@@ -149,7 +151,7 @@ function hud:update(dt)
     Gui.group.pop{}
     
     -- build magic display
-    if true or FLAGS.tower then
+    if FLAGS.tower > 0 then
         Gui.group.push{ grow = "right", pos = {0, screen.h - 70}}
             Gui.group.push{ grow = "down"}
                 Gui.Label{ text = "", size = {TILE_SIZE}}
@@ -158,13 +160,27 @@ function hud:update(dt)
             Gui.group.push{ grow = "down"}
                 createMoveButton("UU", quads[9][5])
                 createMoveButton("DD", quads[9][8])
-                Gui.Label{ text = "", size = {TILE_SIZE}}
             Gui.group.pop{}
             Gui.group.push{ grow = "down"}
             Gui.Label{ text = "", size = {TILE_SIZE}}
             createMoveButton("RR", quads[9][6])
             Gui.group.pop{}
         Gui.group.pop{}
+    end
+    
+    -- build fire display
+    if FLAGS.tower > 1 then
+        if Gui.Button{text = "", size = { TILE_SIZE * 2, TILE_SIZE * 2 }, pos = {150, screen.h - TILE_SIZE * 2}, draw = function(state, title, x,y,w,h)
+                    love.graphics.setColor(Color.white)
+                    if not (state == "normal") then
+                        love.graphics.setColor(Color.highlight_green)
+                    end
+                    if game.res.mana < 1 then love.graphics.setColor(Color.inactive) end
+                    love.graphics.draw(tileset, self.buttonquad, x, y)
+                end
+            } and game.res.mana >= 1 then
+            game.island:doFire()
+        end
     end
     
     -- current message of the day

@@ -6,10 +6,11 @@ local cloudbkg = love.graphics.newImage( "img/cloudbkg.png" )
 
 
 function map:init()
+    self.time = 0
     self.islands = {}
-    table.insert(self.islands, Island(3, 0, #self.islands + 1))
-    table.insert(self.islands, Island(13, 10, #self.islands + 1))
-    table.insert(self.islands, Island(18, 2, #self.islands + 1))
+    table.insert(self.islands, Island(1, 2, #self.islands + 1))
+    table.insert(self.islands, Island(12, 10, #self.islands + 1))
+    table.insert(self.islands, Island(16, 1, #self.islands + 1))
     
     local h = House()
     h.buildtime = 0
@@ -25,6 +26,7 @@ end
 
 
 function map:update(dt)
+    self.time = self.time + dt
     for i,island in ipairs(self.islands) do
         island:update(dt)
     end
@@ -68,7 +70,17 @@ function map:draw()
         
     end
     
+    -- now draw lasers if any
+    SHADER:send("time", self.time)
+    for i,island in ipairs(self.islands) do
+        self.batch:clear()
+        island:drawCollisions(self.batch)
+        love.graphics.draw(self.batch)
+        island:drawLasers()
+    end
+    
     for i,cloud in ipairs(self.clouds) do
+        love.graphics.setColor(Color.white)
         cloud:draw()
     end
     

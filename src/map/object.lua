@@ -139,6 +139,7 @@ function Tower:init(island)
     self.jobs = 5
     self.worker = {}
     self.idle = 4
+    self.counted = false
 end
 
 

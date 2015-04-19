@@ -26,6 +26,12 @@ function Island:init(x, y, id)
     -- list of villagers
     self.villager = {}
     
+    -- list of towers to make things easier the next time
+    self.towers = {}
+    
+    -- fire information
+    self.fire = 0
+    
     self.xs = 0--math.random() * 0.1 - 0.05
     self.ys = 0--math.random() * 0.1 - 0.05
 end
@@ -61,6 +67,12 @@ end
 function Island:update(dt)
     self.x = self.x + self.xs * dt
     self.y = self.y + self.ys * dt
+    
+    if self.fire > 0 then 
+        self.fire = self.fire - dt
+    else
+        self.collisions = nil
+    end
     
     local wx = screen.w / TILE_SIZE
     local wy = screen.h / TILE_SIZE
@@ -124,7 +136,13 @@ function Island:drawObjects(batch)
                             if entry.object.name == "Mason" then FLAGS.mason = true end
                             if entry.object.name == "Farm" then FLAGS.farm = true end
                             if entry.object.name == "Mine" then FLAGS.mine = true end
-                            if entry.object.name == "Tower" then FLAGS.tower = true end
+                        end
+                        
+                        -- towers extra because of ai
+                        if entry.object.name == "Tower" and not entry.object.counted then 
+                            if self.id == 1 then FLAGS.tower = FLAGS.tower + 1 end
+                            entry.object.counted = true
+                            table.insert(self.towers, entry.object)
                         end
                     end
                 end
@@ -145,6 +163,35 @@ function Island:drawChars(batch)
             local tx, ty = self:calcDrawPos(vil:getX(), vil:getY())
             batch:add(vil:getQuad(), tx, ty)
         end
+    end
+end
+
+
+function Island:drawCollisions(batch)
+    if self.collisions then
+        for i,c in ipairs(self.collisions) do
+            batch:add(quads[7][6], c.x, c.y)
+        end
+    end
+end
+
+
+function Island:drawLasers()
+    if self.fire > 0 then
+        love.graphics.setLineStyle("rough")
+        love.graphics.setShader(SHADER)
+        love.graphics.setLineWidth(4)
+        for i,tower in ipairs(self.towers) do
+            local target = self.towers[1]
+            if self.towers[i+1] then target = self.towers[i+1] end
+            love.graphics.setColor(Color.laser)
+            local sx, sy = self:calcDrawPos(tower.loc.x + 0.5, tower.loc.y + 0.2)
+            local tx, ty = self:calcDrawPos(target.loc.x + 0.5, target.loc.y + 0.2)
+            love.graphics.line({sx, sy, tx, ty})
+        end
+        love.graphics.setLineWidth(1)
+        love.graphics.setShader()
+        love.graphics.setLineStyle("smooth")
     end
 end
 
@@ -178,5 +225,40 @@ function Island:move(x, y)
         self.xs = self.xs + x * I_MOV
         self.ys = self.ys + y * I_MOV
         self.game.res.mana = self.game.res.mana - 1
+    end
+end
+
+
+function Island:doFire()
+    if self.fire <= 0 and #self.towers > 1 then
+        self.fire = 0.5
+        self.game.res.mana = self.game.res.mana - 1
+        
+        -- now calculate collisions ... boah this is going to be annoying
+        self.collisions = {}
+        for i,tower in ipairs(self.towers) do
+            local target = self.towers[1]
+            if self.towers[i+1] then target = self.towers[i+1] end
+            local sx, sy = self:calcDrawPos(tower.loc.x + 0.5, tower.loc.y + 0.2)
+            local tx, ty = self:calcDrawPos(target.loc.x + 0.5, target.loc.y + 0.2)
+            local p1 = {x=sx,y=sy}
+            local p2 = {x=tx,y=ty}
+            local r = TILE_SIZE * 0.5
+            for index,island in pairs(map.islands) do
+                if not (index == self.id) then
+                    for k,row in pairs(island.tiles) do
+                        for l,tile in pairs(row) do
+                            if tile and tile.object and type(tile.object) == 'table' then
+                                local cx, cy = island:calcDrawPos(k, l)
+                                local c = {x=cx+r,y=cy+r}
+                                if circleLineCollision(p1, p2, c, r) then
+                                    table.insert(self.collisions, c)
+                                end
+                            end
+                        end
+                    end
+                end
+            end
+        end
     end
 end
