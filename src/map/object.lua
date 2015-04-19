@@ -41,7 +41,7 @@ end
 
 
 function Sawmill:produce()
-    self.island.game:produce("wood", 0.1)
+    self.island.game:produce("wood", 0.2)
 end
 
 
@@ -81,7 +81,7 @@ function Farm:init(island)
     self.name = "Farm"
     self.villager = 0
     self.island = island
-    self.cost = { stone = 1, wood = 3}
+    self.cost = { stone = 0, wood = 3}
     self.jobs = 2
     self.buildtime = 5
     self.worker = {}

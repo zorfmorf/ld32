@@ -60,9 +60,9 @@ function Ai:planBuild()
     else
         local v = math.random(1, 6)
         local iter = 1
-        for build,a in pairs(builds) do
+        for build,a in pairs(self.builds) do
             if iter == v then
-                builds.build = 1
+                self.builds[build] = 1
                 return
             end            
             iter = iter + 1

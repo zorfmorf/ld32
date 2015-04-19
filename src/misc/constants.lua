@@ -10,7 +10,8 @@ Color = {
     inactive = {102, 102, 102, 255}
 }
 
-V_SPEED = 0.5
+V_SPEED = 1
+V_CLOSE_ENOUGH = 0.2
 
 C_MOV = 100
 

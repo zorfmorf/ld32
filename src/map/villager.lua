@@ -79,9 +79,18 @@ function Villager:update(dt)
                 if self.food >= 0 or self.job.name == "Farm" then
                     self.state = "walking"
                     
+                    -- if at already built farm just sit in field
+                    if self.job.name == "Farm" and self.job.buildtime <= 0 then
+                        self.x = self.job.loc.x + 0.6
+                        self.y = self.job.loc.y + 0.5
+                        self.state = "idle"
+                        self.job:produce()
+                        return
+                    end
+                    
                     -- if not at job, go to job, otherwise to jobtarget
-                    if self.job.loc.x == math.floor(self.x) and 
-                        self.job.loc.y == math.floor(self.y) then
+                    if math.abs(self.job.loc.x + 0.5 - self.x) < V_CLOSE_ENOUGH and 
+                        math.abs(self.job.loc.y + 0.5 - self.y) < V_CLOSE_ENOUGH then
                         
                         if self.job.buildtime > 0 then
                             
@@ -95,7 +104,14 @@ function Villager:update(dt)
                             if self.job.targets then
                                 self.target, self.tind = self:getNearestTarget(self.job.targets)
                             else
-                                self.target = self.job.loc
+                                -- if farmer put on field
+                                if self.job.name == "Farm" then
+                                    self.x = self.job.loc.x + 0.6
+                                    self.y = self.job.loc.y + 0.5
+                                    self.state = "idle"
+                                else
+                                    self.target = self.job.loc
+                                end
                             end
                         end
                     else
@@ -116,8 +132,12 @@ function Villager:update(dt)
     
     -- if walking then go to target
     if self.state == "walking" then
-        if self.target.x == math.floor(self.x) and 
-           self.target.y == math.floor(self.y) then
+        if not self.target then
+            self.state = "idle"
+            self.dir = nil
+            print("Error: no target for villager", self.island.id)
+        elseif math.abs(self.target.x + 0.5 - self.x) < V_CLOSE_ENOUGH and 
+            math.abs(self.target.y + 0.5 - self.y) < V_CLOSE_ENOUGH then
             self.target = nil
             self.state = "idle"
             self.dir = nil
@@ -126,17 +146,28 @@ function Villager:update(dt)
                 self.dir = { x = 0, y = 0, wx = 0, wy = 0 }
             
                 -- check directions to walk to
-                if math.floor(self.x) - self.target.x > 0 then self.dir.x = -1 end
-                if math.floor(self.x) - self.target.x < 0 then self.dir.x = 1 end
-                if math.floor(self.y) - self.target.y > 0 then self.dir.y = -1 end
-                if math.floor(self.y) - self.target.y < 0 then self.dir.y = 1 end
+                if self.x - self.target.x > 0 then self.dir.x = -0.5 end
+                if self.x - self.target.x < 0 then self.dir.x = 0.5 end
+                if self.y - self.target.y > 0 then self.dir.y = -0.5 end
+                if self.y - self.target.y < 0 then self.dir.y = 0.5 end
                 
-                -- if both directions are set eliminate a random one
+                -- if both directions are set eliminate one
                 if not (self.dir.x == 0) and not (self.dir.y == 0) then
-                    if math.random(0, 1) == 0 then
+                    
+                    -- check if one would go over a tile in the air
+                    local tx = { x = math.floor(self.x + self.dir.x), y = math.floor(self.y) }
+                    local ty = { x = math.floor(self.x), y = math.floor(self.y + self.dir.y) }
+                    if not self.island.tiles[tx.x] or not self.island.tiles[tx.x][tx.y] or self.island.tiles[tx.x][tx.y].edge then
                         self.dir.x = 0
-                    else
+                    elseif not self.island.tiles[ty.x] or not self.island.tiles[ty.x][ty.y] or self.island.tiles[ty.x][ty.y].edge then
                         self.dir.y = 0
+                    else
+                        -- in this case just eliminate a random one
+                        if math.random(0, 1) == 0 then
+                            self.dir.x = 0
+                        else
+                            self.dir.y = 0
+                        end
                     end
                 end
             end

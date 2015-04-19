@@ -84,7 +84,7 @@ end
 
 
 local function createResourceIcon(text, amount,  quad)
-    Gui.Label{ text = text, draw = buildicon(math.floor(amount), quad)}
+    Gui.Label{ text = text, draw = buildicon(math.floor(amount * 10) * 0.1, quad)}
 end
 
 
@@ -109,9 +109,9 @@ function hud:update(dt)
         Gui.group.push{ grow = "down", pos = {screen.w - 145, 80}, size = {126}}
             Gui.Label{ text = "Buildmenu" }
             createBuildingButton(self.build.house)
-            if FLAGS.house then createBuildingButton(self.build.farm) end
-            if FLAGS.farm then createBuildingButton(self.build.sawmill) end
-            if FLAGS.sawmill then createBuildingButton(self.build.mason) end
+            if FLAGS.house then createBuildingButton(self.build.sawmill) end
+            if FLAGS.sawmill then createBuildingButton(self.build.farm) end
+            if FLAGS.farm then createBuildingButton(self.build.mason) end
             if FLAGS.mason then createBuildingButton(self.build.mine) end
             if FLAGS.mine then createBuildingButton(self.build.tower) end
         Gui.group.pop{}
