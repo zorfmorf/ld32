@@ -3,12 +3,16 @@ hud = {}
 
 local delta = 0
 local font = nil
-local text = "Implementing end game!"
 local tileset = love.graphics.newImage("img/tileset.png")
 
 local game = nil
 
 function hud:init()
+    
+    self.helpdt = 0
+    
+    self.help = nil
+    
     font = {
         h = love.graphics.newFont("font/SFPixelate.ttf", 30),
         b = love.graphics.newFont("font/SFPixelate.ttf", 20)
@@ -109,7 +113,27 @@ local function createMoveButton(text, quad)
 end
 
 
+function hud:buildHelpMessage(dt)
+    self.help = nil
+    if game.island.towers == 1 then
+        self.help = "Build a 2nd tower to attack!"
+    elseif #game.joblist > 1 then
+        self.helpdt = self.helpdt + dt
+        if self.helpdt > 3 then
+            self.help = "You have " .. #game.joblist .. " vacant jobs!"
+        end
+    else
+        self.helpdt = 0
+        if game.res.food < 5 then
+            self.help = "Your food is low!"
+        end
+    end
+end
+
+
 function hud:update(dt)
+    
+    self:buildHelpMessage(dt)
     
     self.checkbuildable = self.checkbuildable - dt
     
@@ -123,18 +147,21 @@ function hud:update(dt)
     
     delta = delta + dt
     
+    love.graphics.setFont(font.b)
+    
     Gui.group.push{ grow = "down"}
     
+        Gui.Label{ text = "Happiness: "..tostring(math.floor(game.happy * 10) * 0.1), pos = {screen.w - 190, 5} }
+    
         -- build toolbar
-        love.graphics.setFont(font.b)
-        Gui.group.push{ grow = "down", pos = {screen.w - 145, 80}, size = {126}}
+        Gui.group.push{ grow = "down", pos = {screen.w - 145, 40}, size = {126}}
             Gui.Label{ text = "Buildmenu" }
             createBuildingButton(self.build.house)
             if FLAGS.house then createBuildingButton(self.build.sawmill) end
             if FLAGS.sawmill then createBuildingButton(self.build.farm) end
             if FLAGS.farm then createBuildingButton(self.build.mason) end
             if FLAGS.mason then createBuildingButton(self.build.mine) end
-            if true or FLAGS.mine then createBuildingButton(self.build.tower) end
+            if FLAGS.mine then createBuildingButton(self.build.tower) end
         Gui.group.pop{}
         
         
@@ -184,8 +211,10 @@ function hud:update(dt)
     end
     
     -- current message of the day
-    love.graphics.setFont(font.h)
-    Gui.Label{ text = text, pos = {100, 20} }
+    if self.help then
+        love.graphics.setFont(font.h)
+        Gui.Label{ text = self.help, pos = {10, 10} }
+    end
 end
 
 

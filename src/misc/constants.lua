@@ -11,12 +11,14 @@ Color = {
     laser = {221, 37, 5, 150}
 }
 
-V_SPEED = 1
-V_CLOSE_ENOUGH = 0.2
+V_SPEED = 1.5
+V_CLOSE_ENOUGH = 0.3
 
 C_MOV = 100
 
-I_MOV = 0.3
+I_MOV = 0.3 -- island movement factor
+
+HAPPY_MOD = 2 -- the higher the faster happiness sinks
 
 FLAGS = {}
 FLAGS.tower = 0

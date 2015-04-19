@@ -25,7 +25,7 @@ function love.load()
     math.randomseed(os.time())
     
     Gamestate.registerEvents()
-    Gamestate.switch(state_ingame)
+    Gamestate.switch(state_intro)
 end
 
 

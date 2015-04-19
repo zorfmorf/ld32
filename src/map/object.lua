@@ -30,7 +30,7 @@ function Sawmill:init(island)
     self.villager = 0
     self.cost = { stone = 2, wood = 3}
     self.jobs = 4
-    self.buildtime = 5
+    self.buildtime = 4
     self.worker = {}
 end
 
@@ -41,7 +41,7 @@ end
 
 
 function Sawmill:produce()
-    self.island.game:produce("wood", 0.2)
+    self.island.game:produce("wood", 0.8)
 end
 
 
@@ -56,7 +56,7 @@ function Mason:init(island)
     self.island = island
     self.cost = { stone = 2, wood = 3}
     self.jobs = 5
-    self.buildtime = 5
+    self.buildtime = 4
     self.worker = {}
 end
 
@@ -69,7 +69,7 @@ end
 function Mason:produce()
     
     -- actually produce
-    self.island.game:produce("stone", 0.1)
+    self.island.game:produce("stone", 0.6)
 end
 
 -- farm
@@ -83,7 +83,7 @@ function Farm:init(island)
     self.island = island
     self.cost = { stone = 0, wood = 3}
     self.jobs = 2
-    self.buildtime = 5
+    self.buildtime = 4
     self.worker = {}
     self.idle = 10
 end
@@ -95,7 +95,7 @@ end
 
 
 function Farm:produce()
-    self.island.game:produce("food", 1)
+    self.island.game:produce("food", 1.3)
 end
 
 -- mine
@@ -109,7 +109,7 @@ function Mine:init(island)
     self.island = island
     self.cost = { stone = 3, wood = 3}
     self.jobs = 4
-    self.buildtime = 5
+    self.buildtime = 4
     self.worker = {}
     self.idle = 3
 end
@@ -121,7 +121,7 @@ end
 
 
 function Mine:produce()
-    self.island.game:produce("ore", 0.1)
+    self.island.game:produce("ore", 0.4)
 end
 
 -- tower
@@ -149,5 +149,5 @@ end
 
 
 function Tower:produce()
-    self.island.game:produce("mana", 0.2)
+    self.island.game:produce("mana", 0.4)
 end

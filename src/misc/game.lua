@@ -14,24 +14,18 @@ local function prepareQuads()
 end
 
 local function prepareResources(i)
-    --[[return {
-        wood = 10 * i,
-        stone = 10 * i,
-        food = 10 * i,
-        ore = 0,
-        mana = 10
-    }]]--
     return {
-        wood = 100 * i,
-        stone = 100 * i,
-        food = 100 * i,
-        ore = 100,
-        mana = 100
+        wood = 14 * i,
+        stone = 10 * i,
+        food = 20,
+        ore = 0,
+        mana = 0
     }
 end
 
 
 function Game:init(island)
+    self.happy = 100
     self.island = island
     if not quads then prepareQuads() end
     self.res = prepareResources(1)
@@ -43,6 +37,16 @@ end
 
 
 function Game:update(dt)
+    
+    if self.island.id == 1 then
+        if self.happy <= 0 then
+            Gamestate.switch(state_lost)
+        end
+        if map.islands[2].game.happy <= 0 and map.islands[3].game.happy <= 0 then
+            Gamestate.switch(state_won)
+        end
+    end
+    
     
     for i,house in ipairs(self.housequeue) do
         
@@ -112,11 +116,13 @@ function Game:produce(res, amount)
 end
 
 
-function Game:getFood(value)
+function Game:getFood(value, dt)
     local output = 0
-    if self.res.food > 0 then
-        self.res.food = math.max(0, self.res.food - value)
+    if self.res.food >= value then
+        self.res.food = self.res.food - value
         output = value
+    else
+        self.happy = self.happy - value * HAPPY_MOD * dt
     end
     return output
 end

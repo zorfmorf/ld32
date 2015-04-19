@@ -46,8 +46,8 @@ end
 
 
 function Villager:deleteObj(obj)
-    if self.obj then
-        if obj.loc.x == self.obj.loc.x and obj.loc.y == self.obj.loc.y then
+    if self.job then
+        if obj.loc.x == self.job.loc.x and obj.loc.y == self.job.loc.y then
             self.state = "idle"
             self.job = nil
             self.idle = 0
@@ -78,7 +78,7 @@ function Villager:update(dt)
         self.food = self.food - self.hunger * dt
     end
     if self.food <= 0 then
-        self.food = self.food + self.island.game:getFood(0.1)
+        self.food = self.food + self.island.game:getFood(0.1, dt)
     end
     
     

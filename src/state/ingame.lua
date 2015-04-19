@@ -12,7 +12,7 @@ end
 function state_ingame:update(dt)
     map:update(dt)
     if drawhud then hud:update(dt) end
-    hud:fps()
+    if false then hud:fps() end
 end
 
 

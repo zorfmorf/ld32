@@ -79,8 +79,8 @@ function Island:update(dt)
     
     if self.x < -1 then self.x = self.x + wx + 1 end
     if self.x > wx then self.x = (self.x - wx) - 1 end
-    if self.y < -1 then print(self.y) self.y = self.y + wy + 1 print(self.y) end
-    if self.y > wy + 1 then print("to large") self.y = (self.y - wy) - 1 end
+    if self.y < -1 then self.y = self.y + wy + 1 end
+    if self.y > wy + 1 then self.y = (self.y - wy) - 1 end
     
     self.game:update(dt)
     if self.ai then self.ai:update(dt) end
@@ -221,7 +221,7 @@ end
 
 
 function Island:move(x, y)
-    if self.game.res.mana > 0 then
+    if self.game.res.mana >= 1 then
         self.xs = self.xs + x * I_MOV
         self.ys = self.ys + y * I_MOV
         self.game.res.mana = self.game.res.mana - 1
@@ -237,6 +237,13 @@ function Island:destroyObject(x, y)
     for i,v in pairs(self.villager) do
         v:deleteObj(obj)
     end
+    
+    if obj.name == "Farm" then
+        self.game.res.food = math.max(0, self.game.res.food - 10)
+    end
+    
+    -- inform ai about demise
+    if self.ai then self.ai:lost(obj.name) end
 end
 
 

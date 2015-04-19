@@ -9,12 +9,18 @@ function Ai:init(island)
     self.build = nil
     self.builds = {
         house = math.random(2, 4),
-        farm = math.random(2, 3),
+        farm = 2,
         mason = math.random(1, 3),
         mine = math.random(1, 2),
         sawmill = math.random(1, 2),
         tower = math.random(1, 2)
     }
+    self.timeMana = 0
+    self.mvtokens = math.random(5, 10)
+    self.mvpref = { x = math.random(0,1), y = math.random(0,1) }
+    if self.mvpref.x == 0 then self.mvpref.x = -1 end
+    if self.mvpref.y == 0 then self.mvpref.y = -1 end
+    
     -- hack so that the small island has a chance
     if self.island.id == 2 then
         self.builds.mason = 1
@@ -38,11 +44,19 @@ function Ai:calcFreeTile(tries)
 end
 
 
+-- if we loose a building we may want to build it again
+function Ai:lost(name)
+    if name == "Sawmill" then self.builds.sawmill = self.builds.sawmill + 1 end
+    if name == "Mason" then self.builds.mason = self.builds.mason + 1 end
+    if name == "Mine" then self.builds.mine = self.builds.mine + 1 end
+end
+
+
 function Ai:planBuild()
     if self.builds.house > 0 or #self.island.game.joblist > 1 then
         self.build = House(self.island)
         self.builds.house = self.builds.house - 1
-    elseif self.builds.farm > 0 or self.island.game.res.food < 1 then
+    elseif self.builds.farm > 0 or self.island.game.res.food < 10 then
         self.build = Farm(self.island)
         self.builds.farm = self.builds.farm - 1
     elseif self.builds.sawmill > 0 then
@@ -58,19 +72,7 @@ function Ai:planBuild()
         self.build = Tower(self.island)
         self.builds.tower = self.builds.tower - 1
     else
-        if math.random(1,3) < 3 then
-            self.build = Tower(self.island)
-        else
-            local v = math.random(1, 6)
-            local iter = 1
-            for build,a in pairs(self.builds) do
-                if iter == v then
-                    self.builds[build] = 1
-                    return
-                end            
-                iter = iter + 1
-            end
-        end
+        self.build = Tower(self.island)
     end
 end
 
@@ -90,10 +92,35 @@ function Ai:decide()
 end
 
 
+function Ai:useMana()
+    if math.random(1,3) == 3 then
+        local x = self.mvpref.x
+        local y = self.mvpref.y
+        if math.random(1,4) == 4 then x = -x end
+        if math.random(1,4) == 4 then y = -y end
+        self.island:move(x, y)
+        self.mvtokens = self.mvtokens - 1
+    else
+        self.island:doFire()
+    end
+end
+
+
 function Ai:update(dt)
     self.timer = self.timer + dt
-    if self.timer > self.incr then
-        self.timer = 0
-        self:decide()
+    self.timeMana = self.timeMana + dt
+    
+    -- do nothing if lost
+    if self.island.game.happy > 0 then
+    
+        if self.timeMana > 1 and self.island.game.res.mana >= 1 then
+            self:useMana()
+            self.timeMana = 0
+        end
+        
+        if self.timer > self.incr then
+            self.timer = 0
+            self:decide()
+        end
     end
 end
