@@ -3,16 +3,19 @@ state_ingame = {}
 
 Camera = require "lib.hump.camera"
 
+local drawhud = true
 
 function state_ingame:enter()
     map:init()
+    hud:init()
     camera = Camera(600, 300)
 end
 
 
 function state_ingame:update(dt)
     map:update(dt)
-    hud:update(dt)
+    if drawhud then hud:update(dt) end
+    hud:fps()
 end
 
 
@@ -31,6 +34,7 @@ function state_ingame:keypressed(key, isrepeat)
     if key == "right" then camera:move(C_MOV, 0) end
     if key == "up" then camera:move(0, -C_MOV) end
     if key == "down" then camera:move(0, C_MOV) end
+    if key == "f1" then drawhud = not drawhud end
 end
 
 

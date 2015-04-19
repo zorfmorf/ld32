@@ -20,9 +20,7 @@ function map:init()
     table.insert(self.clouds, Cloud(20, 10))
     table.insert(self.clouds, Cloud(6, 10))
     
-    self.batch = love.graphics.newSpriteBatch( tileset, 10000 )
-    
-    hud:init()
+    self.batch = love.graphics.newSpriteBatch( tileset, 1000 )
 end
 
 

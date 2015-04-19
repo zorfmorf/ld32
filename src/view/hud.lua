@@ -18,7 +18,18 @@ function hud:init()
     
     -- overwrite of default style
     Gui.core.style.color.normal.fg = Color.white
-    Gui.core.style.color.group.bg = Color.background
+    
+    -- save build buildings to reduce memory issue
+    self.build = {
+        house = House(map.islands[1]),
+        sawmill = Sawmill(map.islands[1]),
+        mason = Mason(map.islands[1]),
+        farm = Farm(map.islands[1]),
+        mine = Mine(map.islands[1]),
+        tower = Tower(map.islands[1])
+    }
+    
+    self.checkbuildable = 1
 end
 
 
@@ -49,8 +60,14 @@ end
 
 
 local function createBuildingButton(build)
-    local canbuild = game:canPay(build)
-    if Gui.Button{ text = build.name, draw = buildbutton(build, canbuild) } and canbuild then game.buildtarget = build end
+    if Gui.Button{ text = build.name, draw = buildbutton(build, build.buildable) } and build.buildable then
+        if build.name == "House" then game.buildtarget = House(map.islands[1]) end
+        if build.name == "Sawmill" then game.buildtarget = Sawmill(map.islands[1]) end
+        if build.name == "Mason" then game.buildtarget = Mason(map.islands[1]) end
+        if build.name == "Farm" then game.buildtarget = Farm(map.islands[1]) end
+        if build.name == "Mine" then game.buildtarget = Mine(map.islands[1]) end
+        if build.name == "Tower" then game.buildtarget = Tower(map.islands[1]) end
+    end
 end
 
 
@@ -67,45 +84,59 @@ end
 
 
 local function createResourceIcon(text, amount,  quad)
-    Gui.Label{ text = text, draw = buildicon(amount, quad)}
+    Gui.Label{ text = text, draw = buildicon(math.floor(amount), quad)}
 end
 
 
 function hud:update(dt)
     
+    self.checkbuildable = self.checkbuildable - dt
+    
+    if self.checkbuildable < 0 then
+        self.checkbuildable = 1
+        for i, build in pairs(self.build) do
+            build.buildable = game:canPay(build)
+        end
+    end
+    
+    
     delta = delta + dt
     
-    -- build toolbar
-    love.graphics.setFont(font.b)
-    Gui.group.push{ grow = "down", pos = {screen.w - 145, 80}, size = {126}, bkg = true, border = true, pad = 6}
-        Gui.Label{ text = "Buildmenu" }
-        createBuildingButton(House())
-        if FLAGS.farm then createBuildingButton(Sawmill(map.islands[1])) end
-        if FLAGS.sawmill then createBuildingButton(Mason(map.islands[1])) end
-        if FLAGS.house then createBuildingButton(Farm(map.islands[1])) end
-        if FLAGS.mason then createBuildingButton(Mine(map.islands[1])) end
-        if FLAGS.mine then createBuildingButton(Tower(map.islands[1])) end
-    Gui.group.pop{}
+    Gui.group.push{ grow = "down"}
     
-    
-    -- build ressource display
-    love.graphics.setFont(font.b)
-    Gui.group.push{ grow = "down", pos = {screen.w - 145, screen.h - 220}, size = {126}, bkg = true, border = true, pad = 6}
-        Gui.Label{ text = "Resources" }
-        createResourceIcon("Stone", game.res.stone, quads[9][0])
-        createResourceIcon("Wood", game.res.wood, quads[9][2])
-        createResourceIcon("Food", game.res.food, quads[9][1])
-        createResourceIcon("Ore", game.res.ore, quads[9][3])
-        if FLAGS.tower then createResourceIcon("Mana", game.res.mana, quads[9][4]) end
+        -- build toolbar
+        love.graphics.setFont(font.b)
+        Gui.group.push{ grow = "down", pos = {screen.w - 145, 80}, size = {126}}
+            Gui.Label{ text = "Buildmenu" }
+            createBuildingButton(self.build.house)
+            if FLAGS.house then createBuildingButton(self.build.farm) end
+            if FLAGS.farm then createBuildingButton(self.build.sawmill) end
+            if FLAGS.sawmill then createBuildingButton(self.build.mason) end
+            if FLAGS.mason then createBuildingButton(self.build.mine) end
+            if FLAGS.mine then createBuildingButton(self.build.tower) end
+        Gui.group.pop{}
+        
+        
+        -- build ressource display
+        Gui.group.push{ grow = "down", pos = {screen.w - 145, 100}, size = {126}}
+            Gui.Label{ text = "Resources" }
+            createResourceIcon("Stone", game.res.stone, quads[9][0])
+            createResourceIcon("Wood", game.res.wood, quads[9][2])
+            createResourceIcon("Food", game.res.food, quads[9][1])
+            createResourceIcon("Ore", game.res.ore, quads[9][3])
+            if FLAGS.tower then createResourceIcon("Mana", game.res.mana, quads[9][4]) end
+        Gui.group.pop{}
+        
     Gui.group.pop{}
     
     -- current message of the day
     love.graphics.setFont(font.h)
-    local toprint = text
-    if math.floor(delta * 2) % 4 == 1 then toprint = toprint .. "." end
-    if math.floor(delta * 2) % 4 == 2 then toprint = toprint .. ".." end
-    if math.floor(delta * 2) % 4 == 3 then toprint = toprint .. "..." end
-    Gui.Label{ text = toprint, pos = {100, 20} }
+    Gui.Label{ text = text, pos = {100, 20} }
+end
+
+
+function hud:fps()
+    love.graphics.setFont(font.h)
     Gui.Label{ text = "FPS: "..love.timer.getFPS(), pos = {screen.w - 150, 20}}
 end
 

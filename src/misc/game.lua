@@ -15,7 +15,7 @@ end
 
 local function prepareResources()
     return {
-        wood = 20,
+        wood = 60,
         stone = 10,
         food = 10,
         ore = 0,
