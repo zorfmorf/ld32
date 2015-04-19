@@ -4,6 +4,9 @@ Island = Class{}
 
 function Island:init(x, y, id)
     
+    self.sound = love.audio.newSource("audio/laser.ogg")
+    self.sound:setLooping(false)
+    
     self.id = id
     
     -- game
@@ -262,8 +265,18 @@ end
 
 function Island:doFire()
     if self.fire <= 0 and #self.towers > 1 then
+        self.sound:stop()
+        self.sound:play()
         self.fire = 0.6
         self.game.res.mana = self.game.res.mana - 1
+        
+        -- first make sure all towers are okay
+        for i,tower in ipairs(self.towers) do
+            if tower.deleted then
+                table.remove(self.towers, i)
+                i = i - 1
+            end
+        end
         
         -- now calculate collisions ... boah this is going to be annoying
         self.collisions = {}

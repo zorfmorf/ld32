@@ -5,7 +5,7 @@ Ai = Class{}
 function Ai:init(island)
     self.island = island
     self.timer = 0
-    self.incr = 3 + math.random() * 3
+    self.incr = 4 + math.random() * 1
     self.build = nil
     self.builds = {
         house = math.random(2, 4),
