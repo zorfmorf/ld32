@@ -170,7 +170,7 @@ end
 function Island:drawCollisions(batch)
     if self.collisions then
         for i,c in ipairs(self.collisions) do
-            batch:add(quads[7][6], c.x, c.y)
+            batch:add(quads[7][6], c.x - TILE_SIZE * 0.5, c.y - TILE_SIZE * 0.5)
         end
     end
 end
@@ -229,9 +229,20 @@ function Island:move(x, y)
 end
 
 
+function Island:destroyObject(x, y)
+    local tile = self.tiles[x][y]
+    local obj = tile.object
+    tile.object = nil
+    obj.deleted = true
+    for i,v in pairs(self.villager) do
+        v:deleteObj(obj)
+    end
+end
+
+
 function Island:doFire()
     if self.fire <= 0 and #self.towers > 1 then
-        self.fire = 0.5
+        self.fire = 0.6
         self.game.res.mana = self.game.res.mana - 1
         
         -- now calculate collisions ... boah this is going to be annoying
@@ -252,6 +263,7 @@ function Island:doFire()
                                 local cx, cy = island:calcDrawPos(k, l)
                                 local c = {x=cx+r,y=cy+r}
                                 if circleLineCollision(p1, p2, c, r) then
+                                    island:destroyObject(k, l)
                                     table.insert(self.collisions, c)
                                 end
                             end

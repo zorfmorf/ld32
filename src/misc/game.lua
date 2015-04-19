@@ -45,13 +45,19 @@ end
 function Game:update(dt)
     
     for i,house in ipairs(self.housequeue) do
-        house.buildtime = house.buildtime - dt
-        if house.buildtime < 0 then
-            for i=1,house.villager do
-                table.insert(self.island.villager, Villager(house.loc.x + 0.5, house.loc.y + 0.8, self.island))
-            end
+        
+        if house.deleted then
             table.remove(self.housequeue, i)
             i = i - 1
+        else
+            house.buildtime = house.buildtime - dt
+            if house.buildtime < 0 then
+                for i=1,house.villager do
+                    table.insert(self.island.villager, Villager(house.loc.x + 0.5, house.loc.y + 0.8, self.island))
+                end
+                table.remove(self.housequeue, i)
+                i = i - 1
+            end
         end
     end
     
@@ -91,8 +97,11 @@ end
 
 
 function Game:getJob()
-    if #self.joblist > 0 then
-        return table.remove(self.joblist, math.random(1, #self.joblist))
+    while #self.joblist > 0 do
+        local job = table.remove(self.joblist, math.random(1, #self.joblist))
+        if not job.deleted then
+            return job
+        end
     end
     return nil
 end

@@ -45,6 +45,19 @@ function Villager:getQuad()
 end
 
 
+function Villager:deleteObj(obj)
+    if self.obj then
+        if obj.loc.x == self.obj.loc.x and obj.loc.y == self.obj.loc.y then
+            self.state = "idle"
+            self.job = nil
+            self.idle = 0
+            self.target = nil
+            self.dir = nil
+        end
+    end
+end
+
+
 function Villager:getNearestTarget(list)
     local c = { index = 0, dist = 100000}
     for i,target in pairs(list) do
