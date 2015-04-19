@@ -158,10 +158,12 @@ end
 
 
 function Island:drawChars(batch)
-    for i,vil in pairs(self.villager) do
-        if not (vil.job and vil.job.name == "Mine" and vil.state == "idle") then
-            local tx, ty = self:calcDrawPos(vil:getX(), vil:getY())
-            batch:add(vil:getQuad(), tx, ty)
+    if self.id == 1 or self.game.happy > 0 then
+        for i,vil in pairs(self.villager) do
+            if not (vil.job and vil.job.name == "Mine" and vil.state == "idle") then
+                local tx, ty = self:calcDrawPos(vil:getX(), vil:getY())
+                batch:add(vil:getQuad(), tx, ty)
+            end
         end
     end
 end
@@ -244,6 +246,17 @@ function Island:destroyObject(x, y)
     
     -- inform ai about demise
     if self.ai then self.ai:lost(obj.name) end
+    
+    -- remove tower from fire list
+    if obj.name == "Tower" then
+        print("Lost a tower at ", self.id)
+        for i,tower in ipairs(self.towers) do
+            if tower.deleted then
+                table.remove(self.towers, i)
+            end
+            return
+        end
+    end
 end
 
 

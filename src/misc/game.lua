@@ -123,6 +123,7 @@ function Game:getFood(value, dt)
         output = value
     else
         self.happy = self.happy - value * HAPPY_MOD * dt
+        if self.island.id > 1 then self.happy = self.happy - 5 * dt end
     end
     return output
 end

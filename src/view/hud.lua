@@ -115,7 +115,7 @@ end
 
 function hud:buildHelpMessage(dt)
     self.help = nil
-    if game.island.towers == 1 then
+    if #game.island.towers == 1 then
         self.help = "Build a 2nd tower to attack!"
     elseif #game.joblist > 1 then
         self.helpdt = self.helpdt + dt
@@ -196,7 +196,7 @@ function hud:update(dt)
     end
     
     -- build fire display
-    if FLAGS.tower > 1 then
+    if #game.island.towers > 1 then
         if Gui.Button{text = "", size = { TILE_SIZE * 2, TILE_SIZE * 2 }, pos = {150, screen.h - TILE_SIZE * 2}, draw = function(state, title, x,y,w,h)
                     love.graphics.setColor(Color.white)
                     if not (state == "normal") then

@@ -3,9 +3,14 @@ state_ingame = {}
 
 local drawhud = true
 
+local loop1 = love.audio.newSource("audio/loop.ogg")
+local loop2 = love.audio.newSource("audio/loop2.ogg")
+
 function state_ingame:enter()
     map:init()
     hud:init()
+    loop1:setLooping(true)
+    loop1:play()
 end
 
 
@@ -13,6 +18,17 @@ function state_ingame:update(dt)
     map:update(dt)
     if drawhud then hud:update(dt) end
     if false then hud:fps() end
+    
+    if loop1:isPlaying() then
+        for i,island in pairs(map.islands) do
+            if #island.towers > 1 then
+                loop1:stop()
+                loop2:setLooping(true)
+                loop2:play()
+                return
+            end
+        end
+    end
 end
 
 
