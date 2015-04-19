@@ -3,7 +3,7 @@ hud = {}
 
 local delta = 0
 local font = nil
-local text = "Implementing enemy ai"
+local text = "Implementing end game!"
 local tileset = love.graphics.newImage("img/tileset.png")
 
 local game = nil
@@ -88,6 +88,25 @@ local function createResourceIcon(text, amount,  quad)
 end
 
 
+local function createMoveButton(text, quad)
+    if Gui.Button{text = text, size = { "tight" },
+        draw = function(state, title, x,y,w,h)
+                love.graphics.setColor(Color.white)
+                if not (state == "normal") then
+                    love.graphics.setColor(Color.highlight_green)
+                end
+                if game.res.mana <= 0 then love.graphics.setColor(Color.inactive) end
+                love.graphics.draw(tileset, quad, x, y)
+            end
+        } and game.res.mana > 0 then
+        if text == "UU" then game.island:move(0, -1) end
+        if text == "LL" then game.island:move(-1, 0) end
+        if text == "RR" then game.island:move(1, 0) end
+        if text == "DD" then game.island:move(0, 1) end
+    end
+end
+
+
 function hud:update(dt)
     
     self.checkbuildable = self.checkbuildable - dt
@@ -128,6 +147,25 @@ function hud:update(dt)
         Gui.group.pop{}
         
     Gui.group.pop{}
+    
+    -- build magic display
+    if true or FLAGS.tower then
+        Gui.group.push{ grow = "right", pos = {0, screen.h - 70}}
+            Gui.group.push{ grow = "down"}
+                Gui.Label{ text = "", size = {TILE_SIZE}}
+                createMoveButton("LL", quads[9][7])
+            Gui.group.pop{}
+            Gui.group.push{ grow = "down"}
+                createMoveButton("UU", quads[9][5])
+                createMoveButton("DD", quads[9][8])
+                Gui.Label{ text = "", size = {TILE_SIZE}}
+            Gui.group.pop{}
+            Gui.group.push{ grow = "down"}
+            Gui.Label{ text = "", size = {TILE_SIZE}}
+            createMoveButton("RR", quads[9][6])
+            Gui.group.pop{}
+        Gui.group.pop{}
+    end
     
     -- current message of the day
     love.graphics.setFont(font.h)

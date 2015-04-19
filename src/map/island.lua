@@ -163,3 +163,12 @@ function Island:placeObject(x, y, obj)
         print( "Could not place object", obj.name, "at", x, y )
     end
 end
+
+
+function Island:move(x, y)
+    if self.game.res.mana > 0 then
+        self.xs = self.xs + x * I_MOV
+        self.ys = self.ys + y * I_MOV
+        self.game.res.mana = self.game.res.mana - 1
+    end
+end

@@ -58,14 +58,18 @@ function Ai:planBuild()
         self.build = Tower(self.island)
         self.builds.tower = self.builds.tower - 1
     else
-        local v = math.random(1, 6)
-        local iter = 1
-        for build,a in pairs(self.builds) do
-            if iter == v then
-                self.builds[build] = 1
-                return
-            end            
-            iter = iter + 1
+        if math.random(1,3) < 3 then
+            self.build = Tower(self.island)
+        else
+            local v = math.random(1, 6)
+            local iter = 1
+            for build,a in pairs(self.builds) do
+                if iter == v then
+                    self.builds[build] = 1
+                    return
+                end            
+                iter = iter + 1
+            end
         end
     end
 end
